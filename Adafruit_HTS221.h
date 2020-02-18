@@ -25,19 +25,12 @@
 
 #define HTS221_I2CADDR_DEFAULT 0x5F ///< HTS221 default i2c address
 #define HTS221_CHIP_ID 0xBC         ///< HTS221 default device id from WHOAMI
+#define HTS221_CTRL_REG_1 0x20      ///< First control regsiter; PD, OBDU, ODR
+#define HTS221_CTRL_REG_2                                                      \
+  0x21 ///< Second control regsiter; BOOT, Heater, ONE_SHOT
+#define HTS221_CTRL_REG_3 0x22 ///< Third control regsiter; DRDY_H_L, DRDY
 
-#define HTS221_EXAMPLE_REG 0x00 ///< Example register
-#define HTS221_WHOAMI 0x0F      ///< Chip ID register
-
-/**
- * @brief Example enum values
- *
- * Allowed values for `setProximityLEDCurrent`.
- */
-typedef enum led_current {
-  HTS221_EXAMPLE_50MA,
-  HTS221_EXAMPLE_75MA,
-} HTS221_example_t;
+#define HTS221_WHOAMI 0x0F ///< Chip ID register
 
 /*!
  *    @brief  Class that stores state and functions for interacting with
@@ -46,19 +39,44 @@ typedef enum led_current {
 class Adafruit_HTS221 {
 public:
   Adafruit_HTS221();
+  ~Adafruit_HTS221();
 
-  bool begin_I2C(uint8_t i2c_address = HTS221_I2CADDR_DEFAULT,
-                 TwoWire *wire = &Wire, int32_t sensor_id = 0);
+  bool begin(uint8_t i2c_address = HTS221_I2CADDR_DEFAULT,
+             TwoWire *wire = &Wire, int32_t sensor_id = 0);
 
-  // bool begin_SPI(uint8_t cs_pin, SPIClass *theSPI = &SPI,
-  //                int32_t sensor_id = 0);
-  // bool begin_SPI(int8_t cs_pin, int8_t sck_pin, int8_t miso_pin,
-  //                int8_t mosi_pin, int32_t sensor_id = 0);
+  // bool getEvent(sensors_event_t *pressure, sensors_event_t *temp);
+  void boot(void);
 
-private:
-  bool _init(void);
+  // Adafruit_Sensor *getTemperatureSensor(void);
+  // Adafruit_Sensor *getPressureSensor(void);
 
-  Adafruit_I2CDevice *i2c_dev;
+protected:
+  // void _read(void);
+  virtual bool _init(int32_t sensor_id);
+
+  //   float unscaled_temp,   ///< Last reading's temperature (C) before scaling
+  //       unscaled_pressure; ///< Last reading's pressure (hPa) before scaling
+
+  //   uint16_t _sensorid_pressure, ///< ID number for pressure
+  //       _sensorid_temp;          ///< ID number for temperature
+
+  Adafruit_I2CDevice *i2c_dev = NULL; ///< Pointer to I2C bus interface
+  Adafruit_SPIDevice *spi_dev = NULL; ///< Pointer to SPI bus interface
+
+  //   Adafruit_LPS2X_Temp *temp_sensor = NULL; ///< Temp sensor data object
+  //   Adafruit_LPS2X_Pressure *pressure_sensor =
+  //       NULL; ///< Pressure sensor data object
+
+  // private:
+  //   friend class Adafruit_LPS2X_Temp;     ///< Gives access to private
+  //   members to
+  //                                         ///< Temp data object
+  //   friend class Adafruit_LPS2X_Pressure; ///< Gives access to private
+  //                                         ///< members to Pressure data
+  //                                         ///< object
+
+  //   void fillPressureEvent(sensors_event_t *pressure, uint32_t timestamp);
+  //   void fillTempEvent(sensors_event_t *temp, uint32_t timestamp);
 };
 
 #endif
