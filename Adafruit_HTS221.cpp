@@ -78,6 +78,10 @@ bool Adafruit_HTS221::_init(int32_t sensor_id) {
     return false;
   }
   boot();
+  setActive(true); // arise!
+  setDataRate(
+      HTS221_RATE_12_5_HZ); // set to max data rate (default is one shot)
+
   return true;
 }
 
@@ -86,8 +90,8 @@ bool Adafruit_HTS221::_init(int32_t sensor_id) {
  *
  */
 void Adafruit_HTS221::boot(void) {
-  Adafruit_BusIO_Register ctrl_2 = Adafruit_BusIO_Register(
-      i2c_dev, spi_dev, ADDRBIT8_HIGH_TOREAD, HTS221_CTRL_REG_2, 1);
+  Adafruit_BusIO_Register ctrl_2 =
+      Adafruit_BusIO_Register(i2c_dev, HTS221_CTRL_REG_2, 1);
   Adafruit_BusIO_RegisterBits boot = Adafruit_BusIO_RegisterBits(&ctrl_2, 1, 7);
 
   boot.write(1);
@@ -96,6 +100,47 @@ void Adafruit_HTS221::boot(void) {
   }
 }
 
+/**
+ * @brief Sets the sensor to active or inactive
+ *
+ * @param active Set to true to enable the sensor, false to disable
+ */
+void Adafruit_HTS221::setActive(bool active) {
+  Adafruit_BusIO_Register ctrl_1 =
+      Adafruit_BusIO_Register(i2c_dev, HTS221_CTRL_REG_1, 1);
+  Adafruit_BusIO_RegisterBits pd_bit =
+      Adafruit_BusIO_RegisterBits(&ctrl_1, 1, 7);
+
+  pd_bit.write(active);
+}
+
+/**
+ * @brief Returns the current measurement rate
+ *
+ * @return hts221_rate_t the current measurement rate
+ */
+hts221_rate_t Adafruit_HTS221::getDataRate(void) {
+  Adafruit_BusIO_Register ctrl_1 =
+      Adafruit_BusIO_Register(i2c_dev, HTS221_CTRL_REG_1, 1);
+  Adafruit_BusIO_RegisterBits data_rate_bits =
+      Adafruit_BusIO_RegisterBits(&ctrl_1, 2, 0);
+
+  return (hts221_rate_t)data_rate_bits.read();
+}
+
+/**
+ * @brief Sets the rate at which measurements are taken
+ *
+ * @param data_rate The new measurement rate. Must be a `hts221_rate_t`
+ */
+void Adafruit_HTS221::setDataRate(hts221_rate_t data_rate) {
+  Adafruit_BusIO_Register ctrl_1 =
+      Adafruit_BusIO_Register(i2c_dev, HTS221_CTRL_REG_1, 1);
+  Adafruit_BusIO_RegisterBits data_rate_bits =
+      Adafruit_BusIO_RegisterBits(&ctrl_1, 2, 0);
+
+  data_rate_bits.write(data_rate);
+}
 /*
   //       TEMPERATURE MATH
 

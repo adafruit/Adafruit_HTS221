@@ -3,7 +3,7 @@
 #include <Adafruit_HTS221.h>
 #include <Adafruit_Sensor.h>
 
-Adafruit_HTS221 hts; // TODO FIX NAME
+Adafruit_HTS221 hts;
 
 void setup(void) {
   Serial.begin(115200);
@@ -12,22 +12,20 @@ void setup(void) {
   Serial.println("Adafruit HTS221 test!");
 
  // Try to initialize!
-  if (!hts.begin_I2C()) {
-  //if (!hts.begin_SPI(LPS_CS)) {
-  //if (!hts.begin_SPI(LPS_CS, LPS_SCK, LPS_MISO, LPS_MOSI)) {
+  if (!hts.begin()) {
     Serial.println("Failed to find HTS221 chip");
     while (1) { delay(10); }
   }
-
   Serial.println("HTS221 Found!");
 
-  //msa.setDataRate(MSA301_DATARATE_31_25_HZ);
-  //Serial.print("Data rate set to: ");
-  //switch (msa.getDataRate()) {
-  //  case HTS221_DATARATE_1_HZ: Serial.println("1 Hz"); break;
-  //  case HTS221_DATARATE_1_95_HZ: Serial.println("1.95 Hz"); break;
-  //  case HTS221_DATARATE_3_9_HZ: Serial.println("3.9 Hz"); break;
-  //}
+  // hts.setDataRate(HTS221_RATE_12_5_HZ);
+  Serial.print("Data rate set to: ");
+  switch (hts.getDataRate()) {
+   case HTS221_RATE_ONE_SHOT: Serial.println("One Shot"); break;
+   case HTS221_RATE_1_HZ: Serial.println("1 Hz"); break;
+   case HTS221_RATE_7_HZ: Serial.println("7 Hz"); break;
+   case HTS221_RATE_12_5_HZ: Serial.println("12.5 Hz"); break;
+  }
 }
 
 void loop() {

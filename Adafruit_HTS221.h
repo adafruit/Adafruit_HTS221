@@ -31,6 +31,17 @@
 #define HTS221_CTRL_REG_3 0x22 ///< Third control regsiter; DRDY_H_L, DRDY
 
 #define HTS221_WHOAMI 0x0F ///< Chip ID register
+/**
+ * @brief
+ *
+ * Allowed values for `setDataRate`.
+ */
+typedef enum {
+  HTS221_RATE_ONE_SHOT,
+  HTS221_RATE_1_HZ,
+  HTS221_RATE_7_HZ,
+  HTS221_RATE_12_5_HZ,
+} hts221_rate_t;
 
 /*!
  *    @brief  Class that stores state and functions for interacting with
@@ -47,6 +58,9 @@ public:
   // bool getEvent(sensors_event_t *pressure, sensors_event_t *temp);
   void boot(void);
 
+  void setActive(bool active);
+  hts221_rate_t getDataRate(void);
+  void setDataRate(hts221_rate_t data_rate);
   // Adafruit_Sensor *getTemperatureSensor(void);
   // Adafruit_Sensor *getPressureSensor(void);
 
@@ -67,14 +81,13 @@ protected:
   //   Adafruit_LPS2X_Pressure *pressure_sensor =
   //       NULL; ///< Pressure sensor data object
 
-  // private:
+private:
   //   friend class Adafruit_LPS2X_Temp;     ///< Gives access to private
   //   members to
   //                                         ///< Temp data object
   //   friend class Adafruit_LPS2X_Pressure; ///< Gives access to private
   //                                         ///< members to Pressure data
   //                                         ///< object
-
   //   void fillPressureEvent(sensors_event_t *pressure, uint32_t timestamp);
   //   void fillTempEvent(sensors_event_t *temp, uint32_t timestamp);
 };
