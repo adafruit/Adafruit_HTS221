@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['setactive',['setActive',['../class_adafruit___h_t_s221.html#aed3430d474f239110e0557959310916e',1,'Adafruit_HTS221']]],
-  ['setdatarate',['setDataRate',['../class_adafruit___h_t_s221.html#aabcedec0121ef58ebd351ba4fd804013',1,'Adafruit_HTS221']]]
+  ['getdatarate',['getDataRate',['../class_adafruit___h_t_s221.html#a6525ad9abce2d039b6bcbe2ef4f584cd',1,'Adafruit_HTS221']]],
+  ['getevent',['getEvent',['../class_adafruit___h_t_s221.html#aa6b8bcad7ff707b19ccea58cdf29343b',1,'Adafruit_HTS221']]]
 ];

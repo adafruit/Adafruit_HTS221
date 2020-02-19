@@ -98,13 +98,18 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memitem:aa6b8bcad7ff707b19ccea58cdf29343b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___h_t_s221.html#aa6b8bcad7ff707b19ccea58cdf29343b">getEvent</a> (sensors_event_t *humidity, sensors_event_t *temp)</td></tr>
 <tr class="memdesc:aa6b8bcad7ff707b19ccea58cdf29343b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the pressure sensor and temperature values as sensor events.  <a href="#aa6b8bcad7ff707b19ccea58cdf29343b">More...</a><br /></td></tr>
 <tr class="separator:aa6b8bcad7ff707b19ccea58cdf29343b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f34f72e699e6a7d02e1835320fe3105"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___h_t_s221.html#a6f34f72e699e6a7d02e1835320fe3105">drdyActiveLow</a> (bool active_low)</td></tr>
+<tr class="memdesc:a6f34f72e699e6a7d02e1835320fe3105"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the polarity of the DRDY pin when active.  <a href="#a6f34f72e699e6a7d02e1835320fe3105">More...</a><br /></td></tr>
+<tr class="separator:a6f34f72e699e6a7d02e1835320fe3105"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7ad631d09039548afb6a08c2c4447add"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___h_t_s221.html#a7ad631d09039548afb6a08c2c4447add">drdyIntEnabled</a> (bool drdy_int_enabled)</td></tr>
+<tr class="memdesc:a7ad631d09039548afb6a08c2c4447add"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables or disables the Data Ready (DRDY) interrupt on the DRDY pin.  <a href="#a7ad631d09039548afb6a08c2c4447add">More...</a><br /></td></tr>
+<tr class="separator:a7ad631d09039548afb6a08c2c4447add"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
-<tr class="memitem:ab70f7935fa84429ab7d20b6b698647e4"><td class="memItemLeft" align="right" valign="top"><a id="ab70f7935fa84429ab7d20b6b698647e4"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___h_t_s221.html#ab70f7935fa84429ab7d20b6b698647e4">_read</a> (void)</td></tr>
-<tr class="memdesc:ab70f7935fa84429ab7d20b6b698647e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the measurement data for all sensors simultaneously. <br /></td></tr>
-<tr class="separator:ab70f7935fa84429ab7d20b6b698647e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac3ec641b8b149c320edad6b7a6e9de28"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___h_t_s221.html#ac3ec641b8b149c320edad6b7a6e9de28">_read</a> (void)</td></tr>
+<tr class="memdesc:ac3ec641b8b149c320edad6b7a6e9de28"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the measurement data for all sensors simultaneously.  <a href="#ac3ec641b8b149c320edad6b7a6e9de28">More...</a><br /></td></tr>
+<tr class="separator:ac3ec641b8b149c320edad6b7a6e9de28"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a12ace5ed1bcd12fe1638c37c793f1e3b"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___h_t_s221.html#a12ace5ed1bcd12fe1638c37c793f1e3b">_init</a> (int32_t sensor_id)</td></tr>
 <tr class="memdesc:a12ace5ed1bcd12fe1638c37c793f1e3b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializer for post i2c/spi init.  <a href="#a12ace5ed1bcd12fe1638c37c793f1e3b">More...</a><br /></td></tr>
 <tr class="separator:a12ace5ed1bcd12fe1638c37c793f1e3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -287,7 +292,88 @@ Adafruit_I2CDevice *&#160;</td><td class="memItemRight" valign="bottom"><a class
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>True </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>true if the event data was read successfully </dd></dl>
+
+</div>
+</div>
+<a id="a6f34f72e699e6a7d02e1835320fe3105"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6f34f72e699e6a7d02e1835320fe3105">&#9670;&nbsp;</a></span>drdyActiveLow()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Adafruit_HTS221::drdyActiveLow </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>active_low</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sets the polarity of the DRDY pin when active. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">active_low</td><td>Set to true to make the DRDY pin active low, false for active low </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a7ad631d09039548afb6a08c2c4447add"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7ad631d09039548afb6a08c2c4447add">&#9670;&nbsp;</a></span>drdyIntEnabled()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Adafruit_HTS221::drdyIntEnabled </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>drdy_int_enabled</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Enables or disables the Data Ready (DRDY) interrupt on the DRDY pin. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">drdy_int_enabled</td><td>Set to true to enable the DRDY interrupt, false to disable </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ac3ec641b8b149c320edad6b7a6e9de28"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac3ec641b8b149c320edad6b7a6e9de28">&#9670;&nbsp;</a></span>_read()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Adafruit_HTS221::_read </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Updates the measurement data for all sensors simultaneously. </p>
+<dl class="section return"><dt>Returns</dt><dd>true if the event data was read successfully </dd></dl>
 
 </div>
 </div>
