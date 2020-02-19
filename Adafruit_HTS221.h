@@ -34,11 +34,14 @@
 #define HTS221_HUMIDITY_OUT_L                                                  \
   (0x28 | 0x80) ///< Humidity output register (LSByte)
 #define HTS221_TEMP_OUT_L                                                      \
-  (0x2A | 0x80) ///< Temperature output register (LSByte)
+  (0x2A | 0x80)                       ///< Temperature output register (LSByte)
+#define HTS221_H0_RH_X8 (0x30 | 0x80) ///< Humididy calibration LSB values
 #define HTS221_T0_DEGC_X8                                                      \
   (0x32 | 0x80) ///< First byte of T0, T1 calibration values
 #define HTS221_T1_T0_MSB                                                       \
   (0x35 | 0x80) ///< Top 2 bits of T0 and T1 (each are 10 bits)
+#define HTS221_H0_T0 (0x36 | 0x80)  ///< Humididy calibration Time 0 value
+#define HTS221_H0_T1 (0x3A | 0x80)  ///< Humididy calibration Time 1 value
 #define HTS221_T0_OUT (0x3C | 0x80) ///< T0_OUT LSByte
 
 #define HTS221_WHOAMI 0x0F ///< Chip ID register
@@ -79,7 +82,7 @@ public:
   // Adafruit_Sensor *getPressureSensor(void);
 
 protected:
-  void _read(void);
+  bool _read(void);
   virtual bool _init(int32_t sensor_id);
 
   float corrected_temp,   ///< Last reading's temperature (C) before scaling
@@ -96,6 +99,7 @@ protected:
 
 private:
   void _fetchTempCalibrationValues(void);
+  void _fetchHumidityCalibrationValues(void);
   //   friend class Adafruit_HTS221_Temp;     ///< Gives access to private
   //   members to
   //                                         ///< Temp data object

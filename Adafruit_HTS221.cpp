@@ -57,6 +57,11 @@ Adafruit_HTS221::~Adafruit_HTS221(void) {}
  */
 bool Adafruit_HTS221::begin(uint8_t i2c_address, TwoWire *wire,
                             int32_t sensor_id) {
+
+  if (i2c_dev) {
+    delete i2c_dev; // remove old interface
+  }
+
   i2c_dev = new Adafruit_I2CDevice(i2c_address, wire);
 
   if (!i2c_dev->begin()) {
@@ -86,6 +91,7 @@ bool Adafruit_HTS221::_init(int32_t sensor_id) {
       HTS221_RATE_12_5_HZ); // set to max data rate (default is one shot)
 
   _fetchTempCalibrationValues();
+  // will remove before release
   Serial.print("T0: ");
   Serial.println(T0);
   Serial.print("T1: ");
@@ -129,11 +135,14 @@ void Adafruit_HTS221::setActive(bool active) {
 /**
  * @brief Sets the polarity of the DRDY pin when active
  *
- * @param active_low Set to true to make the DRDY pin active low, false for active low
+ * @param active_low Set to true to make the DRDY pin active low, false for
+ * active low
  */
-void Adafruit_HTS221::drdyActiveLow(bool active_low){
-  Adafruit_BusIO_Register ctrl_3 = Adafruit_BusIO_Register(i2c_dev, HTS221_CTRL_REG_3, 1);
-  Adafruit_BusIO_RegisterBits drdy_active_low_bit = Adafruit_BusIO_RegisterBits(&ctrl_3, 1, 7);
+void Adafruit_HTS221::drdyActiveLow(bool active_low) {
+  Adafruit_BusIO_Register ctrl_3 =
+      Adafruit_BusIO_Register(i2c_dev, HTS221_CTRL_REG_3, 1);
+  Adafruit_BusIO_RegisterBits drdy_active_low_bit =
+      Adafruit_BusIO_RegisterBits(&ctrl_3, 1, 7);
 
   drdy_active_low_bit.write(active_low);
 }
@@ -141,11 +150,14 @@ void Adafruit_HTS221::drdyActiveLow(bool active_low){
 /**
  * @brief Enables or disables the Data Ready (DRDY) interrupt on the DRDY pin
  *
- * @param drdy_int_enabled Set to true to enable the DRDY interrupt, false to disable
+ * @param drdy_int_enabled Set to true to enable the DRDY interrupt, false to
+ * disable
  */
-void Adafruit_HTS221::drdyIntEnabled(bool drdy_int_enabled){
-  Adafruit_BusIO_Register ctrl_3 = Adafruit_BusIO_Register(i2c_dev, HTS221_CTRL_REG_3, 1);
-  Adafruit_BusIO_RegisterBits drdy_int_enabled_bit = Adafruit_BusIO_RegisterBits(&ctrl_3, 1, 2);
+void Adafruit_HTS221::drdyIntEnabled(bool drdy_int_enabled) {
+  Adafruit_BusIO_Register ctrl_3 =
+      Adafruit_BusIO_Register(i2c_dev, HTS221_CTRL_REG_3, 1);
+  Adafruit_BusIO_RegisterBits drdy_int_enabled_bit =
+      Adafruit_BusIO_RegisterBits(&ctrl_3, 1, 2);
 
   drdy_int_enabled_bit.write(drdy_int_enabled);
 }
@@ -184,13 +196,15 @@ void Adafruit_HTS221::setDataRate(hts221_rate_t data_rate) {
     @param  humidity Sensor event object that will be populated with humidity
    data
     @param  temp Sensor event object that will be populated with temp data
-    @returns True
+    @returns true if the event data was read successfully
 */
 /**************************************************************************/
 bool Adafruit_HTS221::getEvent(sensors_event_t *humidity,
                                sensors_event_t *temp) {
   uint32_t t = millis();
-  _read();
+  if (_read() != true) {
+    return false;
+  };
 
   // use helpers to fill in the events
   fillTempEvent(temp, t);
@@ -199,28 +213,33 @@ bool Adafruit_HTS221::getEvent(sensors_event_t *humidity,
 
 /******************* Adafruit_Sensor functions *****************/
 /*!
- *     @brief  Updates the measurement data for all sensors simultaneously
+ *  @brief  Updates the measurement data for all sensors simultaneously
+ *
+    @returns true if the event data was read successfully
  */
 /**************************************************************************/
-void Adafruit_HTS221::_read(void) {
+bool Adafruit_HTS221::_read(void) {
 
   Adafruit_BusIO_Register temp_data =
       Adafruit_BusIO_Register(i2c_dev, HTS221_TEMP_OUT_L, 2);
 
   uint8_t buffer[2];
 
-  temp_data.read(buffer, 2);
+  if (!temp_data.read(buffer, 2)) {
+    return false;
+  }
   raw_temperature = 0;
 
-  raw_temperature |= (int16_t)(buffer[1]);
+  raw_temperature = buffer[1];
   raw_temperature <<= 8;
-  raw_temperature |= (int16_t)(buffer[0]);
+  raw_temperature |= buffer[0];
 
   if (raw_temperature & 0x8000) {
     raw_temperature = raw_temperature - 0xFFFF;
   }
 
   _applyTemperatureCorrection();
+  return true;
 }
 
 void Adafruit_HTS221::fillTempEvent(sensors_event_t *temp, uint32_t timestamp) {
@@ -241,32 +260,71 @@ void Adafruit_HTS221::_fetchTempCalibrationValues(void) {
       Adafruit_BusIO_Register(i2c_dev, HTS221_T0_OUT, 4);
 
   // From page 26 of https://www.st.com/resource/en/datasheet/hts221.pdf
-
   uint8_t buffer[4];
   // Get bytes for and assemble T0 and T1
   t1_t0_msb.read(buffer, 1);
   // mask out the MSBs for each value and shift up to T1[8:9]
-  T1 |= (int16_t)(buffer[0] & 0b1100);
+  T0 = 0;
+  T1 = 0;
+  T1 = (buffer[0] & 0b1100);
   T1 <<= 6;
-  T0 |= (int16_t)(buffer[0] & 0b0011);
+  T0 = (buffer[0] & 0b0011);
   T0 <<= 8;
 
   t0_degc_x8_l.read(buffer, 2);
   //  Or T1[0:7] on to the above to make a full 10 bits
-  T0 |= (int16_t)buffer[0];
+  T0 |= buffer[0];
   T0 >>= 3; // divide by 8 (as documented)
-  T1 |= (int16_t)buffer[1];
+  T1 |= buffer[1];
   T1 >>= 3;
 
   to_out.read(buffer, 4);
 
-  T0_OUT |= (int16_t)(buffer[1]);
+  T0_OUT = buffer[1];
   T0_OUT <<= 8;
-  T0_OUT |= (int16_t)(buffer[0]);
+  T0_OUT |= buffer[0];
 
-  T1_OUT |= (int16_t)(buffer[3]);
+  T1_OUT = buffer[3];
   T1_OUT <<= 8;
-  T1_OUT |= (int16_t)(buffer[2]);
+  T1_OUT |= buffer[2];
+}
+
+void Adafruit_HTS221::_fetchHumidityCalibrationValues(void) {
+  // Adafruit_BusIO_Register h0_rh_x8 =
+  //     Adafruit_BusIO_Register(i2c_dev, HTS221_H0_RH_X8, 2);
+
+  // Adafruit_BusIO_Register h0_t0_out =
+  //     Adafruit_BusIO_Register(i2c_dev, HTS221_H0_T0, 2);
+  // Adafruit_BusIO_Register h1_t0_out =
+  //     Adafruit_BusIO_Register(i2c_dev, HTS221_H0_T1, 2);
+
+  // // From page 26 of https://www.st.com/resource/en/datasheet/hts221.pdf
+
+  // uint8_t buffer[4];
+  // // Get bytes for and assemble T0 and T1
+  // t1_t0_msb.read(buffer, 1);
+  // // mask out the MSBs for each value and shift up to T1[8:9]
+  // T1 |= (int16_t)(buffer[0] & 0b1100);
+  // T1 <<= 6;
+  // T0 |= (int16_t)(buffer[0] & 0b0011);
+  // T0 <<= 8;
+
+  // t0_degc_x8_l.read(buffer, 2);
+  // //  Or T1[0:7] on to the above to make a full 10 bits
+  // T0 |= (int16_t)buffer[0];
+  // T0 >>= 3; // divide by 8 (as documented)
+  // T1 |= (int16_t)buffer[1];
+  // T1 >>= 3;
+
+  // to_out.read(buffer, 4);
+
+  // T0_OUT |= (int16_t)(buffer[1]);
+  // T0_OUT <<= 8;
+  // T0_OUT |= (int16_t)(buffer[0]);
+
+  // T1_OUT |= (int16_t)(buffer[3]);
+  // T1_OUT <<= 8;
+  // T1_OUT |= (int16_t)(buffer[2]);
 }
 
 /**
