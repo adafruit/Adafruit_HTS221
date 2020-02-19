@@ -127,6 +127,30 @@ void Adafruit_HTS221::setActive(bool active) {
 }
 
 /**
+ * @brief Sets the polarity of the DRDY pin when active
+ *
+ * @param active_low Set to true to make the DRDY pin active low, false for active low
+ */
+void Adafruit_HTS221::drdyActiveLow(bool active_low){
+  Adafruit_BusIO_Register ctrl_3 = Adafruit_BusIO_Register(i2c_dev, HTS221_CTRL_REG_3, 1);
+  Adafruit_BusIO_RegisterBits drdy_active_low_bit = Adafruit_BusIO_RegisterBits(&ctrl_3, 1, 7);
+
+  drdy_active_low_bit.write(active_low);
+}
+
+/**
+ * @brief Enables or disables the Data Ready (DRDY) interrupt on the DRDY pin
+ *
+ * @param drdy_int_enabled Set to true to enable the DRDY interrupt, false to disable
+ */
+void Adafruit_HTS221::drdyIntEnabled(bool drdy_int_enabled){
+  Adafruit_BusIO_Register ctrl_3 = Adafruit_BusIO_Register(i2c_dev, HTS221_CTRL_REG_3, 1);
+  Adafruit_BusIO_RegisterBits drdy_int_enabled_bit = Adafruit_BusIO_RegisterBits(&ctrl_3, 1, 2);
+
+  drdy_int_enabled_bit.write(drdy_int_enabled);
+}
+
+/**
  * @brief Returns the current measurement rate
  *
  * @return hts221_rate_t the current measurement rate
@@ -253,8 +277,10 @@ void Adafruit_HTS221::_applyTemperatureCorrection(void) {
 
   // TEMPERATURE MATH
   // Poorly explained on pages 27&28 of
-  // https://www.st.com/resource/en/datasheet/hts221.pdf Derived from
+  // https://www.st.com/resource/en/datasheet/hts221.pdf
+  // Derived from
   // https://github.com/stm32duino/HTS221/blob/b645af37c51c40b0161ea045e11f9f1bc28b8517/src/HTS221_Driver.c#L396
+
   corrected_temp =
       (float)
           // measured temp(LSB) - offset(LSB) * (calibration measurement delta)

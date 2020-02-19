@@ -73,6 +73,8 @@ public:
   hts221_rate_t getDataRate(void);
   void setDataRate(hts221_rate_t data_rate);
   bool getEvent(sensors_event_t *humidity, sensors_event_t *temp);
+  void drdyActiveLow(bool active_low);
+  void drdyIntEnabled(bool drdy_int_enabled);
   // Adafruit_Sensor *getTemperatureSensor(void);
   // Adafruit_Sensor *getPressureSensor(void);
 
