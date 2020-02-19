@@ -34,8 +34,9 @@
 #define HTS221_HUMIDITY_OUT_L                                                  \
   (0x28 | 0x80) ///< Humidity output register (LSByte)
 #define HTS221_TEMP_OUT_L                                                      \
-  (0x2A | 0x80)                       ///< Temperature output register (LSByte)
-#define HTS221_H0_RH_X8 (0x30 | 0x80) ///< Humididy calibration LSB values
+  (0x2A | 0x80)              ///< Temperature output register (LSByte)
+#define HTS221_H0_RH_X2 0x30 ///< Humididy calibration LSB values
+#define HTS221_H1_RH_X2 0x31 ///< Humididy calibration LSB values
 #define HTS221_T0_DEGC_X8                                                      \
   (0x32 | 0x80) ///< First byte of T0, T1 calibration values
 #define HTS221_T1_T0_MSB                                                       \
@@ -109,6 +110,8 @@ private:
   //                                         ///< object
   //   void fillPressureEvent(sensors_event_t *humidity, uint32_t timestamp);
   int16_t T0, T1, T0_OUT, T1_OUT; ///< Temperature calibration values
+  uint8_t H0, H1;                 ///< Humidity calibration values
+  int16_t H0_T0_OUT, H1_T0_OUT;   ///< Humidity calibration values
   uint16_t raw_temperature; ///< The raw unscaled, uncorrected temperature value
   void fillTempEvent(sensors_event_t *temp, uint32_t timestamp);
   void _applyTemperatureCorrection(void);

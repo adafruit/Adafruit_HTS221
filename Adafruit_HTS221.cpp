@@ -100,6 +100,21 @@ bool Adafruit_HTS221::_init(int32_t sensor_id) {
   Serial.println(T0_OUT);
   Serial.print("T1_OUT: ");
   Serial.println(T1_OUT);
+
+  _fetchHumidityCalibrationValues();
+
+  Serial.print("H0: ");
+  Serial.println(H0);
+  Serial.print("H1: ");
+  Serial.println(H1);
+  Serial.print("H0_T0_OUT: ");
+  Serial.println(H0_T0_OUT);
+  Serial.print("H1_T0_OUT: ");
+  Serial.println(H1_T0_OUT);
+  // h1_rh_x2.read(&H1);
+
+  // h0_t0_out.read(&H0_T0_OUT);
+  // h1_t0_out.read(&H1_T0_OUT);
   return true;
 }
 
@@ -284,15 +299,35 @@ void Adafruit_HTS221::_fetchTempCalibrationValues(void) {
 }
 
 void Adafruit_HTS221::_fetchHumidityCalibrationValues(void) {
-  // Adafruit_BusIO_Register h0_rh_x8 =
-  //     Adafruit_BusIO_Register(i2c_dev, HTS221_H0_RH_X8, 2);
+  Adafruit_BusIO_Register h0_rh_x2 =
+      Adafruit_BusIO_Register(i2c_dev, HTS221_H0_RH_X2, 1);
+  Adafruit_BusIO_Register h1_rh_x2 =
+      Adafruit_BusIO_Register(i2c_dev, HTS221_H1_RH_X2, 1);
 
-  // Adafruit_BusIO_Register h0_t0_out =
-  //     Adafruit_BusIO_Register(i2c_dev, HTS221_H0_T0, 2);
-  // Adafruit_BusIO_Register h1_t0_out =
-  //     Adafruit_BusIO_Register(i2c_dev, HTS221_H0_T1, 2);
+  Adafruit_BusIO_Register h0_t0_out =
+      Adafruit_BusIO_Register(i2c_dev, HTS221_H0_T0, 2);
+
+  Adafruit_BusIO_Register h1_t0_out =
+      Adafruit_BusIO_Register(i2c_dev, HTS221_H0_T1, 2);
 
   // // From page 26 of https://www.st.com/resource/en/datasheet/hts221.pdf
+
+  h0_rh_x2.read(&H0);
+  h1_rh_x2.read(&H1);
+
+  h0_t0_out.read(&H0_T0_OUT);
+  h1_t0_out.read(&H1_T0_OUT);
+
+  // H0: 62
+  // H1: 144
+  // H0_T0_OUT: 3
+  // H1_T0_OUT: -14781
+
+  // Values from SmartEverything driver:
+  // Got _h0_rH =>62
+  // Got _h1_rH =>144
+  // Got _H0_T0 =>3
+  // Got _H1_T0 =>-14781
 
   // uint8_t buffer[4];
   // // Get bytes for and assemble T0 and T1
