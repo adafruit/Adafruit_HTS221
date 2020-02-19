@@ -77,6 +77,9 @@ bool Adafruit_HTS221::_init(int32_t sensor_id) {
   if (chip_id.read() != HTS221_CHIP_ID) {
     return false;
   }
+
+  _sensorid_humidity = sensor_id;
+  _sensorid_temp = sensor_id + 1;
   boot();
   setActive(true); // arise!
   setDataRate(
@@ -141,6 +144,60 @@ void Adafruit_HTS221::setDataRate(hts221_rate_t data_rate) {
 
   data_rate_bits.write(data_rate);
 }
+
+/**************************************************************************/
+/*!
+    @brief  Gets the pressure sensor and temperature values as sensor events
+    @param  humidity Sensor event object that will be populated with humidity
+   data
+    @param  temp Sensor event object that will be populated with temp data
+    @returns True
+*/
+/**************************************************************************/
+bool Adafruit_HTS221::getEvent(sensors_event_t *humidity,
+                               sensors_event_t *temp) {
+  uint32_t t = millis();
+  _read();
+
+  // use helpers to fill in the events
+  fillTempEvent(temp, t);
+  return true;
+}
+
+/******************* Adafruit_Sensor functions *****************/
+/*!
+ *     @brief  Updates the measurement data for all sensors simultaneously
+ */
+/**************************************************************************/
+void Adafruit_HTS221::_read(void) {
+
+  Adafruit_BusIO_Register temp_data =
+      Adafruit_BusIO_Register(i2c_dev, HTS221_TEMP_OUT_L, 2);
+
+  uint8_t buffer[2];
+
+  temp_data.read(buffer, 2);
+  int16_t raw_temp;
+
+  raw_temp |= (int16_t)(buffer[1]);
+  raw_temp <<= 8;
+  raw_temp |= (int16_t)(buffer[0]);
+
+  if (raw_temp & 0x8000) {
+    raw_temp = raw_temp - 0xFFFF;
+  }
+  unscaled_temp = raw_temp;
+}
+
+void Adafruit_HTS221::fillTempEvent(sensors_event_t *temp, uint32_t timestamp) {
+  memset(temp, 0, sizeof(sensors_event_t));
+  temp->version = sizeof(sensors_event_t);
+  temp->sensor_id = _sensorid_temp;
+  temp->type = SENSOR_TYPE_AMBIENT_TEMPERATURE;
+  temp->timestamp = timestamp;
+  temp->temperature = unscaled_temp; // will need to be corrected
+}
+// SENSOR_TYPE_RELATIVE_HUMIDITY
 /*
   //       TEMPERATURE MATH
 

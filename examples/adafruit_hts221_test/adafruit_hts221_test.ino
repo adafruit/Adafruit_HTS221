@@ -18,7 +18,7 @@ void setup(void) {
   }
   Serial.println("HTS221 Found!");
 
-  // hts.setDataRate(HTS221_RATE_12_5_HZ);
+  // hts.setDataRate(HTS221_RATE_7_HZ);
   Serial.print("Data rate set to: ");
   switch (hts.getDataRate()) {
    case HTS221_RATE_ONE_SHOT: Serial.println("One Shot"); break;
@@ -29,9 +29,10 @@ void setup(void) {
 }
 
 void loop() {
-  // sensors_event_t temp;
-  // sensors_event_t humidity;
-  // hts.getEvent(&humidity, &temp);// get pressure
+  sensors_event_t temp;
+  sensors_event_t humidity;
+  hts.getEvent(&humidity, &temp);// get pressure
+  Serial.print("Temperature: "); Serial.print(temp.temperature); Serial.println(" degrees C");
 
-  delay(100);
+  delay(500);
 }
