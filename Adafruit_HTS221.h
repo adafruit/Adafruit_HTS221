@@ -20,6 +20,7 @@
 
 #include "Arduino.h"
 #include <Adafruit_BusIO_Register.h>
+#include <Adafruit_SPIDevice.h>
 #include <Adafruit_I2CDevice.h>
 #include <Adafruit_Sensor.h>
 #include <Wire.h>
@@ -68,8 +69,16 @@ public:
   Adafruit_HTS221();
   ~Adafruit_HTS221();
 
-  bool begin(uint8_t i2c_address = HTS221_I2CADDR_DEFAULT,
-             TwoWire *wire = &Wire, int32_t sensor_id = 0);
+  // bool begin(uint8_t i2c_address = HTS221_I2CADDR_DEFAULT,
+  //            TwoWire *wire = &Wire, int32_t sensor_id = 0);
+
+  bool begin_I2C(uint8_t i2c_addr = HTS221_I2CADDR_DEFAULT,
+                 TwoWire *wire = &Wire, int32_t sensor_id = 0);
+
+  bool begin_SPI(uint8_t cs_pin, SPIClass *theSPI = &SPI,
+                 int32_t sensor_id = 0);
+  bool begin_SPI(int8_t cs_pin, int8_t sck_pin, int8_t miso_pin,
+                 int8_t mosi_pin, int32_t sensor_id = 0);
 
   // bool getEvent(sensors_event_t *humidity, sensors_event_t *temp);
   void boot(void);
@@ -94,6 +103,7 @@ protected:
       _sensorid_temp;          ///< ID number for temperature
 
   Adafruit_I2CDevice *i2c_dev = NULL; ///< Pointer to I2C bus interface
+  Adafruit_SPIDevice *spi_dev = NULL; ///< Pointer to I2C bus interface
 
   //   Adafruit_HTS221_Temp *temp_sensor = NULL; ///< Temp sensor data object
   //   Adafruit_HTS221_Pressure *humidity_sensor =
