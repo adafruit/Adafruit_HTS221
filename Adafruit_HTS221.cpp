@@ -86,10 +86,14 @@ bool Adafruit_HTS221::_init(int32_t sensor_id) {
       HTS221_RATE_12_5_HZ); // set to max data rate (default is one shot)
 
   _fetchTempCalibrationValues();
-  Serial.print("T0: "); Serial.println(T0);
-  Serial.print("T1: "); Serial.println(T1);
-  Serial.print("T0_OUT: "); Serial.println(T0_OUT);
-  Serial.print("T1_OUT: "); Serial.println(T1_OUT);
+  Serial.print("T0: ");
+  Serial.println(T0);
+  Serial.print("T1: ");
+  Serial.println(T1);
+  Serial.print("T0_OUT: ");
+  Serial.println(T0_OUT);
+  Serial.print("T1_OUT: ");
+  Serial.println(T1_OUT);
   return true;
 }
 
@@ -193,7 +197,6 @@ void Adafruit_HTS221::_read(void) {
   }
 
   _applyTemperatureCorrection();
-
 }
 
 void Adafruit_HTS221::fillTempEvent(sensors_event_t *temp, uint32_t timestamp) {
@@ -205,11 +208,13 @@ void Adafruit_HTS221::fillTempEvent(sensors_event_t *temp, uint32_t timestamp) {
   temp->temperature = unscaled_temp; // will need to be corrected
 }
 
-
-void Adafruit_HTS221::_fetchTempCalibrationValues(void){
-  Adafruit_BusIO_Register t0_degc_x8_l = Adafruit_BusIO_Register(i2c_dev, HTS221_T0_DEGC_X8, 2);
-  Adafruit_BusIO_Register t1_t0_msb = Adafruit_BusIO_Register(i2c_dev, HTS221_T1_T0_MSB, 1);
-  Adafruit_BusIO_Register  to_out = Adafruit_BusIO_Register(i2c_dev, HTS221_T0_OUT, 4);
+void Adafruit_HTS221::_fetchTempCalibrationValues(void) {
+  Adafruit_BusIO_Register t0_degc_x8_l =
+      Adafruit_BusIO_Register(i2c_dev, HTS221_T0_DEGC_X8, 2);
+  Adafruit_BusIO_Register t1_t0_msb =
+      Adafruit_BusIO_Register(i2c_dev, HTS221_T1_T0_MSB, 1);
+  Adafruit_BusIO_Register to_out =
+      Adafruit_BusIO_Register(i2c_dev, HTS221_T0_OUT, 4);
 
   uint8_t buffer[4];
   // Get bytes for and assemble T0 and T1
@@ -240,9 +245,8 @@ void Adafruit_HTS221::_fetchTempCalibrationValues(void){
  * @brief Use the temperature calibration values to correct the raw value
  *
  */
-void Adafruit_HTS221::_applyTemperatureCorrection(void){
+void Adafruit_HTS221::_applyTemperatureCorrection(void) {
   Serial.println("applying correction *waves wand*");
-
 }
 
 // SENSOR_TYPE_RELATIVE_HUMIDITY
