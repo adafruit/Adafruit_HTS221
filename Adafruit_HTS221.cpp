@@ -85,6 +85,9 @@ bool Adafruit_HTS221::_init(int32_t sensor_id) {
   setDataRate(
       HTS221_RATE_12_5_HZ); // set to max data rate (default is one shot)
 
+  _fetchTempCalibrationValues();
+  Serial.print("T0: "); Serial.println(T0);
+  Serial.print("T1: "); Serial.println(T1);
   return true;
 }
 
@@ -177,16 +180,18 @@ void Adafruit_HTS221::_read(void) {
   uint8_t buffer[2];
 
   temp_data.read(buffer, 2);
-  int16_t raw_temp;
+  raw_temperature = 0;
 
-  raw_temp |= (int16_t)(buffer[1]);
-  raw_temp <<= 8;
-  raw_temp |= (int16_t)(buffer[0]);
+  raw_temperature |= (int16_t)(buffer[1]);
+  raw_temperature <<= 8;
+  raw_temperature |= (int16_t)(buffer[0]);
 
-  if (raw_temp & 0x8000) {
-    raw_temp = raw_temp - 0xFFFF;
+  if (raw_temperature & 0x8000) {
+    raw_temperature = raw_temperature - 0xFFFF;
   }
-  unscaled_temp = raw_temp;
+
+  _applyTemperatureCorrection();
+
 }
 
 void Adafruit_HTS221::fillTempEvent(sensors_event_t *temp, uint32_t timestamp) {
@@ -197,6 +202,42 @@ void Adafruit_HTS221::fillTempEvent(sensors_event_t *temp, uint32_t timestamp) {
   temp->timestamp = timestamp;
   temp->temperature = unscaled_temp; // will need to be corrected
 }
+
+
+void Adafruit_HTS221::_fetchTempCalibrationValues(void){
+  Adafruit_BusIO_Register temp_calibration_l = Adafruit_BusIO_Register(i2c_dev, HTS221_T0_DEGC_X8, 2);
+  Adafruit_BusIO_Register temp_calibration_h = Adafruit_BusIO_Register(i2c_dev, HTS221_T1_T0_MSB, 1);
+
+  uint8_t buffer[2];
+
+  temp_calibration_h.read(buffer, 1);
+
+  uint16_t t0_raw, t1_raw;
+
+  t1_raw |= buffer[0] & 0b1100;
+  t1_raw <<= 6;
+  t0_raw |= buffer[0] & 0b0011;
+  t0_raw <<= 8;
+
+  temp_calibration_l.read(buffer, 2);
+
+  t0_raw |= buffer[0];
+  t1_raw |= buffer[1];
+
+  T0 = t0_raw;
+  T1 = t1_raw;
+
+}
+
+/**
+ * @brief Use the temperature calibration values to correct the raw value
+ *
+ */
+void Adafruit_HTS221::_applyTemperatureCorrection(void){
+  Serial.println("applying correction *waves wand*");
+
+}
+
 // SENSOR_TYPE_RELATIVE_HUMIDITY
 /*
   //       TEMPERATURE MATH
