@@ -205,7 +205,7 @@ void Adafruit_HTS221::fillTempEvent(sensors_event_t *temp, uint32_t timestamp) {
   temp->sensor_id = _sensorid_temp;
   temp->type = SENSOR_TYPE_AMBIENT_TEMPERATURE;
   temp->timestamp = timestamp;
-  temp->temperature = unscaled_temp; // will need to be corrected
+  temp->temperature = corrected_temp; // will need to be corrected
 }
 
 void Adafruit_HTS221::_fetchTempCalibrationValues(void) {
@@ -216,19 +216,23 @@ void Adafruit_HTS221::_fetchTempCalibrationValues(void) {
   Adafruit_BusIO_Register to_out =
       Adafruit_BusIO_Register(i2c_dev, HTS221_T0_OUT, 4);
 
+  // From page 26 of https://www.st.com/resource/en/datasheet/hts221.pdf
+
   uint8_t buffer[4];
   // Get bytes for and assemble T0 and T1
   t1_t0_msb.read(buffer, 1);
-
+  // mask out the MSBs for each value and shift up to T1[8:9]
   T1 |= (int16_t)(buffer[0] & 0b1100);
   T1 <<= 6;
   T0 |= (int16_t)(buffer[0] & 0b0011);
   T0 <<= 8;
 
   t0_degc_x8_l.read(buffer, 2);
-
+  //  Or T1[0:7] on to the above to make a full 10 bits
   T0 |= (int16_t)buffer[0];
+  T0 >>= 3; // divide by 8 (as documented)
   T1 |= (int16_t)buffer[1];
+  T1 >>= 3;
 
   to_out.read(buffer, 4);
 
@@ -246,42 +250,17 @@ void Adafruit_HTS221::_fetchTempCalibrationValues(void) {
  *
  */
 void Adafruit_HTS221::_applyTemperatureCorrection(void) {
-  Serial.println("applying correction *waves wand*");
+
+  // TEMPERATURE MATH
+  // Poorly explained on pages 27&28 of
+  // https://www.st.com/resource/en/datasheet/hts221.pdf Derived from
+  // https://github.com/stm32duino/HTS221/blob/b645af37c51c40b0161ea045e11f9f1bc28b8517/src/HTS221_Driver.c#L396
+  corrected_temp =
+      (float)
+          // measured temp(LSB) - offset(LSB) * (calibration measurement delta)
+          (raw_temperature - T0_OUT) *
+          (float)(T1 - T0) / // divided by..
+          // Calibration LSB delta + Calibration offset?
+          (float)(T1_OUT - T0_OUT) +
+      T0;
 }
-
-// SENSOR_TYPE_RELATIVE_HUMIDITY
-/*
-  //       TEMPERATURE MATH
-
-  int16_t T0_out, T1_out, T_out, T0_degC_x8_u16, T1_degC_x8_u16;
-  int16_t T0_degC, T1_degC;
-  uint8_t buffer[4], tmp;
-  float   tmp_f;
-
-  if(HTS221_ReadReg(handle, HTS221_T0_DEGC_X8, 2, buffer))
-    return HTS221_ERROR;
-  if(HTS221_ReadReg(handle, HTS221_T0_T1_DEGC_H2, 1, &tmp))
-    return HTS221_ERROR;
-
-  T0_degC_x8_u16 = (((uint16_t)(tmp & 0x03)) << 8) | ((uint16_t)buffer[0]);
-  T1_degC_x8_u16 = (((uint16_t)(tmp & 0x0C)) << 6) | ((uint16_t)buffer[1]);
-  T0_degC = T0_degC_x8_u16 >> 3;
-  T1_degC = T1_degC_x8_u16 >> 3;
-
-  if(HTS221_ReadReg(handle, HTS221_T0_OUT_L, 4, buffer))
-    return HTS221_ERROR;
-
-  T0_out = (((uint16_t)buffer[1]) << 8) | (uint16_t)buffer[0];
-  T1_out = (((uint16_t)buffer[3]) << 8) | (uint16_t)buffer[2];
-
-  if(HTS221_ReadReg(handle, HTS221_TEMP_OUT_L_REG, 2, buffer))
-    return HTS221_ERROR;
-
-  T_out = (((uint16_t)buffer[1]) << 8) | (uint16_t)buffer[0];
-
-  tmp_f = (float)(T_out - T0_out) * (float)(T1_degC - T0_degC) / (float)(T1_out
-  - T0_out)  +  T0_degC; tmp_f *= 10.0f;
-
-  *value = ( int16_t )tmp_f;
-
-  */

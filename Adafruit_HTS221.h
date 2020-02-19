@@ -80,8 +80,8 @@ protected:
   void _read(void);
   virtual bool _init(int32_t sensor_id);
 
-  float unscaled_temp,   ///< Last reading's temperature (C) before scaling
-      unscaled_humidity; ///< Last reading's humidity (percent) before scaling
+  float corrected_temp,   ///< Last reading's temperature (C) before scaling
+      corrected_humidity; ///< Last reading's humidity (percent) before scaling
 
   uint16_t _sensorid_humidity, ///< ID number for humidity
       _sensorid_temp;          ///< ID number for temperature
