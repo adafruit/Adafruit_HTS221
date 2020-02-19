@@ -88,6 +88,8 @@ bool Adafruit_HTS221::_init(int32_t sensor_id) {
   _fetchTempCalibrationValues();
   Serial.print("T0: "); Serial.println(T0);
   Serial.print("T1: "); Serial.println(T1);
+  Serial.print("T0_OUT: "); Serial.println(T0_OUT);
+  Serial.print("T1_OUT: "); Serial.println(T1_OUT);
   return true;
 }
 
@@ -205,28 +207,33 @@ void Adafruit_HTS221::fillTempEvent(sensors_event_t *temp, uint32_t timestamp) {
 
 
 void Adafruit_HTS221::_fetchTempCalibrationValues(void){
-  Adafruit_BusIO_Register temp_calibration_l = Adafruit_BusIO_Register(i2c_dev, HTS221_T0_DEGC_X8, 2);
-  Adafruit_BusIO_Register temp_calibration_h = Adafruit_BusIO_Register(i2c_dev, HTS221_T1_T0_MSB, 1);
+  Adafruit_BusIO_Register t0_degc_x8_l = Adafruit_BusIO_Register(i2c_dev, HTS221_T0_DEGC_X8, 2);
+  Adafruit_BusIO_Register t1_t0_msb = Adafruit_BusIO_Register(i2c_dev, HTS221_T1_T0_MSB, 1);
+  Adafruit_BusIO_Register  to_out = Adafruit_BusIO_Register(i2c_dev, HTS221_T0_OUT, 4);
 
-  uint8_t buffer[2];
+  uint8_t buffer[4];
+  // Get bytes for and assemble T0 and T1
+  t1_t0_msb.read(buffer, 1);
 
-  temp_calibration_h.read(buffer, 1);
+  T1 |= (int16_t)(buffer[0] & 0b1100);
+  T1 <<= 6;
+  T0 |= (int16_t)(buffer[0] & 0b0011);
+  T0 <<= 8;
 
-  uint16_t t0_raw, t1_raw;
+  t0_degc_x8_l.read(buffer, 2);
 
-  t1_raw |= buffer[0] & 0b1100;
-  t1_raw <<= 6;
-  t0_raw |= buffer[0] & 0b0011;
-  t0_raw <<= 8;
+  T0 |= (int16_t)buffer[0];
+  T1 |= (int16_t)buffer[1];
 
-  temp_calibration_l.read(buffer, 2);
+  to_out.read(buffer, 4);
 
-  t0_raw |= buffer[0];
-  t1_raw |= buffer[1];
+  T0_OUT |= (int16_t)(buffer[1]);
+  T0_OUT <<= 8;
+  T0_OUT |= (int16_t)(buffer[0]);
 
-  T0 = t0_raw;
-  T1 = t1_raw;
-
+  T1_OUT |= (int16_t)(buffer[3]);
+  T1_OUT <<= 8;
+  T1_OUT |= (int16_t)(buffer[2]);
 }
 
 /**

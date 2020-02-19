@@ -35,6 +35,7 @@
 #define HTS221_TEMP_OUT_L (0x2A | 0x80)     ///< Temperature output register (LSByte)
 #define HTS221_T0_DEGC_X8 (0x32 | 0x80) ///< First byte of T0, T1 calibration values
 #define HTS221_T1_T0_MSB (0x35 | 0x80) ///< Top 2 bits of T0 and T1 (each are 10 bits)
+#define HTS221_T0_OUT (0x3C | 0x80) ///< T0_OUT LSByte
 
 #define HTS221_WHOAMI 0x0F ///< Chip ID register
 /**
@@ -96,7 +97,7 @@ private:
   //                                         ///< members to Pressure data
   //                                         ///< object
   //   void fillPressureEvent(sensors_event_t *humidity, uint32_t timestamp);
-  int16_t T0, T1; ///< Temperature calibration values
+  int16_t T0, T1, T0_OUT, T1_OUT; ///< Temperature calibration values
   uint16_t raw_temperature; ///< The raw unscaled, uncorrected temperature value
   void fillTempEvent(sensors_event_t *temp, uint32_t timestamp);
   void _applyTemperatureCorrection(void); 
