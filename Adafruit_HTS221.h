@@ -43,6 +43,7 @@
 #define HTS221_H0_T0 (0x36 | 0x80)  ///< Humididy calibration Time 0 value
 #define HTS221_H0_T1 (0x3A | 0x80)  ///< Humididy calibration Time 1 value
 #define HTS221_T0_OUT (0x3C | 0x80) ///< T0_OUT LSByte
+#define HTS221_T1_OUT (0x3E | 0x80) ///< T1_OUT LSByte
 
 #define HTS221_WHOAMI 0x0F ///< Chip ID register
 /**

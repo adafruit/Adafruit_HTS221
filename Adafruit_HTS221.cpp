@@ -257,8 +257,9 @@ void Adafruit_HTS221::_fetchTempCalibrationValues(void) {
   Adafruit_BusIO_Register t1_t0_msb =
       Adafruit_BusIO_Register(i2c_dev, HTS221_T1_T0_MSB, 1);
   Adafruit_BusIO_Register to_out =
-      Adafruit_BusIO_Register(i2c_dev, HTS221_T0_OUT, 4);
-
+      Adafruit_BusIO_Register(i2c_dev, HTS221_T0_OUT, 2);
+  Adafruit_BusIO_Register t1_out =
+      Adafruit_BusIO_Register(i2c_dev, HTS221_T1_OUT, 2);
   // From page 26 of https://www.st.com/resource/en/datasheet/hts221.pdf
   uint8_t buffer[4];
   // Get bytes for and assemble T0 and T1
@@ -278,15 +279,8 @@ void Adafruit_HTS221::_fetchTempCalibrationValues(void) {
   T1 |= buffer[1];
   T1 >>= 3;
 
-  to_out.read(buffer, 4);
-
-  T0_OUT = buffer[1];
-  T0_OUT <<= 8;
-  T0_OUT |= buffer[0];
-
-  T1_OUT = buffer[3];
-  T1_OUT <<= 8;
-  T1_OUT |= buffer[2];
+  to_out.read(&T0_OUT);
+  t1_out.read(&T1_OUT);
 }
 
 void Adafruit_HTS221::_fetchHumidityCalibrationValues(void) {
