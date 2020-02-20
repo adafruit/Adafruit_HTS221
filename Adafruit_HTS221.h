@@ -117,7 +117,7 @@ private:
   int16_t T0, T1, T0_OUT, T1_OUT; ///< Temperature calibration values
   uint8_t H0, H1;                 ///< Humidity calibration values
   int16_t H0_T0_OUT, H1_T0_OUT;   ///< Humidity calibration values
-  uint16_t raw_temperature; ///< The raw unscaled, uncorrected temperature value
+  int16_t raw_temperature; ///< The raw unscaled, uncorrected temperature value
   void fillTempEvent(sensors_event_t *temp, uint32_t timestamp);
   void _applyTemperatureCorrection(void);
   uint8_t multi_byte_address_mask = 0x80; // default to I2C
