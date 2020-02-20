@@ -20,8 +20,8 @@
 
 #include "Arduino.h"
 #include <Adafruit_BusIO_Register.h>
-#include <Adafruit_SPIDevice.h>
 #include <Adafruit_I2CDevice.h>
+#include <Adafruit_SPIDevice.h>
 #include <Adafruit_Sensor.h>
 #include <Wire.h>
 
@@ -30,22 +30,17 @@
 #define HTS221_CTRL_REG_1 0x20      ///< First control regsiter; PD, OBDU, ODR
 #define HTS221_CTRL_REG_2                                                      \
   0x21 ///< Second control regsiter; BOOT, Heater, ONE_SHOT
-#define HTS221_CTRL_REG_3 0x22 ///< Third control regsiter; DRDY_H_L, DRDY
-// setting MSB on addresses to enable auto-increment on multi-byte reads
-#define HTS221_HUMIDITY_OUT_L                                                  \
-  (0x28 | 0x80) ///< Humidity output register (LSByte)
-#define HTS221_TEMP_OUT_L                                                      \
-  (0x2A | 0x80)              ///< Temperature output register (LSByte)
-#define HTS221_H0_RH_X2 0x30 ///< Humididy calibration LSB values
-#define HTS221_H1_RH_X2 0x31 ///< Humididy calibration LSB values
-#define HTS221_T0_DEGC_X8                                                      \
-  (0x32 | 0x80) ///< First byte of T0, T1 calibration values
-#define HTS221_T1_T0_MSB                                                       \
-  (0x35 | 0x80) ///< Top 2 bits of T0 and T1 (each are 10 bits)
-#define HTS221_H0_T0 (0x36 | 0x80)  ///< Humididy calibration Time 0 value
-#define HTS221_H0_T1 (0x3A | 0x80)  ///< Humididy calibration Time 1 value
-#define HTS221_T0_OUT (0x3C | 0x80) ///< T0_OUT LSByte
-#define HTS221_T1_OUT (0x3E | 0x80) ///< T1_OUT LSByte
+#define HTS221_CTRL_REG_3 0x22  ///< Third control regsiter; DRDY_H_L, DRDY
+#define HTS221_HUMIDITY_OUT0x28 ///< Humidity output register (LSByte)
+#define HTS221_TEMP_OUT_L 0x2A  ///< Temperature output register (LSByte)
+#define HTS221_H0_RH_X2 0x30    ///< Humididy calibration LSB values
+#define HTS221_H1_RH_X2 0x31    ///< Humididy calibration LSB values
+#define HTS221_T0_DEGC_X8 0x32  ///< First byte of T0, T1 calibration values
+#define HTS221_T1_T0_MSB 0x35   ///< Top 2 bits of T0 and T1 (each are 10 bits)
+#define HTS221_H0_T0 0x36       ///< Humididy calibration Time 0 value
+#define HTS221_H0_T1 0x3A       ///< Humididy calibration Time 1 value
+#define HTS221_T0_OUT 0x3C      ///< T0_OUT LSByte
+#define HTS221_T1_OUT 0x3E      ///< T1_OUT LSByte
 
 #define HTS221_WHOAMI 0x0F ///< Chip ID register
 /**
@@ -125,6 +120,7 @@ private:
   uint16_t raw_temperature; ///< The raw unscaled, uncorrected temperature value
   void fillTempEvent(sensors_event_t *temp, uint32_t timestamp);
   void _applyTemperatureCorrection(void);
+  uint8_t multi_byte_address_mask = 0x80; // default to I2C
 };
 
 #endif
