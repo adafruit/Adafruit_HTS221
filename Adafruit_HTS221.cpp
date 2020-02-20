@@ -132,7 +132,7 @@ bool Adafruit_HTS221::begin_SPI(int8_t cs_pin, int8_t sck_pin, int8_t miso_pin,
  */
 bool Adafruit_HTS221::_init(int32_t sensor_id) {
   Adafruit_BusIO_Register chip_id =
-      Adafruit_BusIO_Register(i2c_dev, HTS221_WHOAMI, 1);
+      Adafruit_BusIO_Register(i2c_dev, spi_dev, ADDRBIT8_HIGH_TOREAD, HTS221_WHOAMI, 1);
 
   // make sure we're talking to the right chip
   if (chip_id.read() != HTS221_CHIP_ID) {
@@ -180,7 +180,7 @@ bool Adafruit_HTS221::_init(int32_t sensor_id) {
  */
 void Adafruit_HTS221::boot(void) {
   Adafruit_BusIO_Register ctrl_2 =
-      Adafruit_BusIO_Register(i2c_dev, HTS221_CTRL_REG_2, 1);
+      Adafruit_BusIO_Register(i2c_dev, spi_dev, ADDRBIT8_HIGH_TOREAD, HTS221_CTRL_REG_2, 1);
   Adafruit_BusIO_RegisterBits boot = Adafruit_BusIO_RegisterBits(&ctrl_2, 1, 7);
 
   boot.write(1);
@@ -196,7 +196,7 @@ void Adafruit_HTS221::boot(void) {
  */
 void Adafruit_HTS221::setActive(bool active) {
   Adafruit_BusIO_Register ctrl_1 =
-      Adafruit_BusIO_Register(i2c_dev, HTS221_CTRL_REG_1, 1);
+      Adafruit_BusIO_Register(i2c_dev, spi_dev, ADDRBIT8_HIGH_TOREAD, HTS221_CTRL_REG_1, 1);
   Adafruit_BusIO_RegisterBits pd_bit =
       Adafruit_BusIO_RegisterBits(&ctrl_1, 1, 7);
 
@@ -211,7 +211,7 @@ void Adafruit_HTS221::setActive(bool active) {
  */
 void Adafruit_HTS221::drdyActiveLow(bool active_low) {
   Adafruit_BusIO_Register ctrl_3 =
-      Adafruit_BusIO_Register(i2c_dev, HTS221_CTRL_REG_3, 1);
+      Adafruit_BusIO_Register(i2c_dev, spi_dev, ADDRBIT8_HIGH_TOREAD, HTS221_CTRL_REG_3, 1);
   Adafruit_BusIO_RegisterBits drdy_active_low_bit =
       Adafruit_BusIO_RegisterBits(&ctrl_3, 1, 7);
 
@@ -226,7 +226,7 @@ void Adafruit_HTS221::drdyActiveLow(bool active_low) {
  */
 void Adafruit_HTS221::drdyIntEnabled(bool drdy_int_enabled) {
   Adafruit_BusIO_Register ctrl_3 =
-      Adafruit_BusIO_Register(i2c_dev, HTS221_CTRL_REG_3, 1);
+      Adafruit_BusIO_Register(i2c_dev, spi_dev, ADDRBIT8_HIGH_TOREAD, HTS221_CTRL_REG_3, 1);
   Adafruit_BusIO_RegisterBits drdy_int_enabled_bit =
       Adafruit_BusIO_RegisterBits(&ctrl_3, 1, 2);
 
@@ -240,7 +240,7 @@ void Adafruit_HTS221::drdyIntEnabled(bool drdy_int_enabled) {
  */
 hts221_rate_t Adafruit_HTS221::getDataRate(void) {
   Adafruit_BusIO_Register ctrl_1 =
-      Adafruit_BusIO_Register(i2c_dev, HTS221_CTRL_REG_1, 1);
+      Adafruit_BusIO_Register(i2c_dev, spi_dev, ADDRBIT8_HIGH_TOREAD, HTS221_CTRL_REG_1, 1);
   Adafruit_BusIO_RegisterBits data_rate_bits =
       Adafruit_BusIO_RegisterBits(&ctrl_1, 2, 0);
 
@@ -254,7 +254,7 @@ hts221_rate_t Adafruit_HTS221::getDataRate(void) {
  */
 void Adafruit_HTS221::setDataRate(hts221_rate_t data_rate) {
   Adafruit_BusIO_Register ctrl_1 =
-      Adafruit_BusIO_Register(i2c_dev, HTS221_CTRL_REG_1, 1);
+      Adafruit_BusIO_Register(i2c_dev, spi_dev, ADDRBIT8_HIGH_TOREAD, HTS221_CTRL_REG_1, 1);
   Adafruit_BusIO_RegisterBits data_rate_bits =
       Adafruit_BusIO_RegisterBits(&ctrl_1, 2, 0);
 
@@ -292,7 +292,7 @@ bool Adafruit_HTS221::getEvent(sensors_event_t *humidity,
 bool Adafruit_HTS221::_read(void) {
 
   Adafruit_BusIO_Register temp_data =
-      Adafruit_BusIO_Register(i2c_dev, HTS221_TEMP_OUT_L, 2);
+      Adafruit_BusIO_Register(i2c_dev, spi_dev, ADDRBIT8_HIGH_TOREAD, HTS221_TEMP_OUT_L, 2);
 
   uint8_t buffer[2];
 
@@ -324,13 +324,13 @@ void Adafruit_HTS221::fillTempEvent(sensors_event_t *temp, uint32_t timestamp) {
 
 void Adafruit_HTS221::_fetchTempCalibrationValues(void) {
   Adafruit_BusIO_Register t0_degc_x8_l =
-      Adafruit_BusIO_Register(i2c_dev, HTS221_T0_DEGC_X8, 2);
+      Adafruit_BusIO_Register(i2c_dev, spi_dev, ADDRBIT8_HIGH_TOREAD, HTS221_T0_DEGC_X8, 2);
   Adafruit_BusIO_Register t1_t0_msb =
-      Adafruit_BusIO_Register(i2c_dev, HTS221_T1_T0_MSB, 1);
+      Adafruit_BusIO_Register(i2c_dev, spi_dev, ADDRBIT8_HIGH_TOREAD, HTS221_T1_T0_MSB, 1);
   Adafruit_BusIO_Register to_out =
-      Adafruit_BusIO_Register(i2c_dev, HTS221_T0_OUT, 2);
+      Adafruit_BusIO_Register(i2c_dev, spi_dev, ADDRBIT8_HIGH_TOREAD, HTS221_T0_OUT, 2);
   Adafruit_BusIO_Register t1_out =
-      Adafruit_BusIO_Register(i2c_dev, HTS221_T1_OUT, 2);
+      Adafruit_BusIO_Register(i2c_dev, spi_dev, ADDRBIT8_HIGH_TOREAD, HTS221_T1_OUT, 2);
   // From page 26 of https://www.st.com/resource/en/datasheet/hts221.pdf
   uint8_t buffer[4];
   // Get bytes for and assemble T0 and T1
@@ -356,15 +356,15 @@ void Adafruit_HTS221::_fetchTempCalibrationValues(void) {
 
 void Adafruit_HTS221::_fetchHumidityCalibrationValues(void) {
   Adafruit_BusIO_Register h0_rh_x2 =
-      Adafruit_BusIO_Register(i2c_dev, HTS221_H0_RH_X2, 1);
+      Adafruit_BusIO_Register(i2c_dev, spi_dev, ADDRBIT8_HIGH_TOREAD, HTS221_H0_RH_X2, 1);
   Adafruit_BusIO_Register h1_rh_x2 =
-      Adafruit_BusIO_Register(i2c_dev, HTS221_H1_RH_X2, 1);
+      Adafruit_BusIO_Register(i2c_dev, spi_dev, ADDRBIT8_HIGH_TOREAD, HTS221_H1_RH_X2, 1);
 
   Adafruit_BusIO_Register h0_t0_out =
-      Adafruit_BusIO_Register(i2c_dev, HTS221_H0_T0, 2);
+      Adafruit_BusIO_Register(i2c_dev, spi_dev, ADDRBIT8_HIGH_TOREAD, HTS221_H0_T0, 2);
 
   Adafruit_BusIO_Register h1_t0_out =
-      Adafruit_BusIO_Register(i2c_dev, HTS221_H0_T1, 2);
+      Adafruit_BusIO_Register(i2c_dev, spi_dev, ADDRBIT8_HIGH_TOREAD, HTS221_H0_T1, 2);
 
   // // From page 26 of https://www.st.com/resource/en/datasheet/hts221.pdf
 
