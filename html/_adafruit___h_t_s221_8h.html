@@ -69,6 +69,7 @@ $(function() {
 <div class="textblock"><code>#include &quot;Arduino.h&quot;</code><br />
 <code>#include &lt;Adafruit_BusIO_Register.h&gt;</code><br />
 <code>#include &lt;Adafruit_I2CDevice.h&gt;</code><br />
+<code>#include &lt;Adafruit_SPIDevice.h&gt;</code><br />
 <code>#include &lt;Adafruit_Sensor.h&gt;</code><br />
 <code>#include &lt;Wire.h&gt;</code><br />
 </div>
@@ -76,6 +77,12 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___h_t_s221___humidity.html">Adafruit_HTS221_Humidity</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adafruit Unified Sensor interface for the humidity sensor component of HTS221.  <a href="class_adafruit___h_t_s221___humidity.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___h_t_s221___temp.html">Adafruit_HTS221_Temp</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adafruit Unified Sensor interface for the temperature sensor component of HTS221.  <a href="class_adafruit___h_t_s221___temp.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___h_t_s221.html">Adafruit_HTS221</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class that stores state and functions for interacting with the HTS221 I2C Digital Potentiometer.  <a href="class_adafruit___h_t_s221.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -102,38 +109,46 @@ Macros</h2></td></tr>
 #define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_adafruit___h_t_s221_8h.html#a34b8de714e71fc631e76813639608123">HTS221_CTRL_REG_3</a>&#160;&#160;&#160;0x22</td></tr>
 <tr class="memdesc:a34b8de714e71fc631e76813639608123"><td class="mdescLeft">&#160;</td><td class="mdescRight">Third control regsiter; DRDY_H_L, DRDY. <br /></td></tr>
 <tr class="separator:a34b8de714e71fc631e76813639608123"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acef3d26278abdc70a50447aa4b784e01"><td class="memItemLeft" align="right" valign="top"><a id="acef3d26278abdc70a50447aa4b784e01"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_adafruit___h_t_s221_8h.html#acef3d26278abdc70a50447aa4b784e01">HTS221_HUMIDITY_OUT_L</a>&#160;&#160;&#160;(0x28 | 0x80)</td></tr>
-<tr class="memdesc:acef3d26278abdc70a50447aa4b784e01"><td class="mdescLeft">&#160;</td><td class="mdescRight">Humidity output register (LSByte) <br /></td></tr>
-<tr class="separator:acef3d26278abdc70a50447aa4b784e01"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8eb78952e5ac83c9dd7da2507350e27d"><td class="memItemLeft" align="right" valign="top"><a id="a8eb78952e5ac83c9dd7da2507350e27d"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_adafruit___h_t_s221_8h.html#a8eb78952e5ac83c9dd7da2507350e27d">HTS221_HUMIDITY_OUT</a>&#160;&#160;&#160;0x28</td></tr>
+<tr class="memdesc:a8eb78952e5ac83c9dd7da2507350e27d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Humidity output register (LSByte) <br /></td></tr>
+<tr class="separator:a8eb78952e5ac83c9dd7da2507350e27d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a08a30140c07cab80950b0f27d3068903"><td class="memItemLeft" align="right" valign="top"><a id="a08a30140c07cab80950b0f27d3068903"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_adafruit___h_t_s221_8h.html#a08a30140c07cab80950b0f27d3068903">HTS221_TEMP_OUT_L</a>&#160;&#160;&#160;(0x2A | 0x80)</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_adafruit___h_t_s221_8h.html#a08a30140c07cab80950b0f27d3068903">HTS221_TEMP_OUT_L</a>&#160;&#160;&#160;0x2A</td></tr>
 <tr class="memdesc:a08a30140c07cab80950b0f27d3068903"><td class="mdescLeft">&#160;</td><td class="mdescRight">Temperature output register (LSByte) <br /></td></tr>
 <tr class="separator:a08a30140c07cab80950b0f27d3068903"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a559684a5b84f8840238cac31d05e19d7"><td class="memItemLeft" align="right" valign="top"><a id="a559684a5b84f8840238cac31d05e19d7"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_adafruit___h_t_s221_8h.html#a559684a5b84f8840238cac31d05e19d7">HTS221_H0_RH_X8</a>&#160;&#160;&#160;(0x30 | 0x80)</td></tr>
-<tr class="memdesc:a559684a5b84f8840238cac31d05e19d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Humididy calibration LSB values. <br /></td></tr>
-<tr class="separator:a559684a5b84f8840238cac31d05e19d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af9bfd58a9221ec51d2186983a222bd7a"><td class="memItemLeft" align="right" valign="top"><a id="af9bfd58a9221ec51d2186983a222bd7a"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_adafruit___h_t_s221_8h.html#af9bfd58a9221ec51d2186983a222bd7a">HTS221_H0_RH_X2</a>&#160;&#160;&#160;0x30</td></tr>
+<tr class="memdesc:af9bfd58a9221ec51d2186983a222bd7a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Humididy calibration LSB values. <br /></td></tr>
+<tr class="separator:af9bfd58a9221ec51d2186983a222bd7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a821173ee52f5d73a587aea678746d421"><td class="memItemLeft" align="right" valign="top"><a id="a821173ee52f5d73a587aea678746d421"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_adafruit___h_t_s221_8h.html#a821173ee52f5d73a587aea678746d421">HTS221_H1_RH_X2</a>&#160;&#160;&#160;0x31</td></tr>
+<tr class="memdesc:a821173ee52f5d73a587aea678746d421"><td class="mdescLeft">&#160;</td><td class="mdescRight">Humididy calibration LSB values. <br /></td></tr>
+<tr class="separator:a821173ee52f5d73a587aea678746d421"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4dea7613af13017b969a94346754f50a"><td class="memItemLeft" align="right" valign="top"><a id="a4dea7613af13017b969a94346754f50a"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_adafruit___h_t_s221_8h.html#a4dea7613af13017b969a94346754f50a">HTS221_T0_DEGC_X8</a>&#160;&#160;&#160;(0x32 | 0x80)</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_adafruit___h_t_s221_8h.html#a4dea7613af13017b969a94346754f50a">HTS221_T0_DEGC_X8</a>&#160;&#160;&#160;0x32</td></tr>
 <tr class="memdesc:a4dea7613af13017b969a94346754f50a"><td class="mdescLeft">&#160;</td><td class="mdescRight">First byte of T0, T1 calibration values. <br /></td></tr>
 <tr class="separator:a4dea7613af13017b969a94346754f50a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a501c82eee73d5c43fa970372a8b33900"><td class="memItemLeft" align="right" valign="top"><a id="a501c82eee73d5c43fa970372a8b33900"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_adafruit___h_t_s221_8h.html#a501c82eee73d5c43fa970372a8b33900">HTS221_T1_T0_MSB</a>&#160;&#160;&#160;(0x35 | 0x80)</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_adafruit___h_t_s221_8h.html#a501c82eee73d5c43fa970372a8b33900">HTS221_T1_T0_MSB</a>&#160;&#160;&#160;0x35</td></tr>
 <tr class="memdesc:a501c82eee73d5c43fa970372a8b33900"><td class="mdescLeft">&#160;</td><td class="mdescRight">Top 2 bits of T0 and T1 (each are 10 bits) <br /></td></tr>
 <tr class="separator:a501c82eee73d5c43fa970372a8b33900"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2b3e411b4ff3c0e652dc5e0e9d408f44"><td class="memItemLeft" align="right" valign="top"><a id="a2b3e411b4ff3c0e652dc5e0e9d408f44"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_adafruit___h_t_s221_8h.html#a2b3e411b4ff3c0e652dc5e0e9d408f44">HTS221_H0_T0</a>&#160;&#160;&#160;(0x36 | 0x80)</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_adafruit___h_t_s221_8h.html#a2b3e411b4ff3c0e652dc5e0e9d408f44">HTS221_H0_T0</a>&#160;&#160;&#160;0x36</td></tr>
 <tr class="memdesc:a2b3e411b4ff3c0e652dc5e0e9d408f44"><td class="mdescLeft">&#160;</td><td class="mdescRight">Humididy calibration Time 0 value. <br /></td></tr>
 <tr class="separator:a2b3e411b4ff3c0e652dc5e0e9d408f44"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae624733c4c40347336ed7d7114637724"><td class="memItemLeft" align="right" valign="top"><a id="ae624733c4c40347336ed7d7114637724"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_adafruit___h_t_s221_8h.html#ae624733c4c40347336ed7d7114637724">HTS221_H0_T1</a>&#160;&#160;&#160;(0x3A | 0x80)</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_adafruit___h_t_s221_8h.html#ae624733c4c40347336ed7d7114637724">HTS221_H0_T1</a>&#160;&#160;&#160;0x3A</td></tr>
 <tr class="memdesc:ae624733c4c40347336ed7d7114637724"><td class="mdescLeft">&#160;</td><td class="mdescRight">Humididy calibration Time 1 value. <br /></td></tr>
 <tr class="separator:ae624733c4c40347336ed7d7114637724"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a82d5352b008c71525029b715d48f7abe"><td class="memItemLeft" align="right" valign="top"><a id="a82d5352b008c71525029b715d48f7abe"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_adafruit___h_t_s221_8h.html#a82d5352b008c71525029b715d48f7abe">HTS221_T0_OUT</a>&#160;&#160;&#160;(0x3C | 0x80)</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_adafruit___h_t_s221_8h.html#a82d5352b008c71525029b715d48f7abe">HTS221_T0_OUT</a>&#160;&#160;&#160;0x3C</td></tr>
 <tr class="memdesc:a82d5352b008c71525029b715d48f7abe"><td class="mdescLeft">&#160;</td><td class="mdescRight">T0_OUT LSByte. <br /></td></tr>
 <tr class="separator:a82d5352b008c71525029b715d48f7abe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a18a761bc75872424ee2d78301fa0a12e"><td class="memItemLeft" align="right" valign="top"><a id="a18a761bc75872424ee2d78301fa0a12e"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_adafruit___h_t_s221_8h.html#a18a761bc75872424ee2d78301fa0a12e">HTS221_T1_OUT</a>&#160;&#160;&#160;0x3E</td></tr>
+<tr class="memdesc:a18a761bc75872424ee2d78301fa0a12e"><td class="mdescLeft">&#160;</td><td class="mdescRight">T1_OUT LSByte. <br /></td></tr>
+<tr class="separator:a18a761bc75872424ee2d78301fa0a12e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1167b13ef2fc5ceb96750c806985a039"><td class="memItemLeft" align="right" valign="top"><a id="a1167b13ef2fc5ceb96750c806985a039"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_adafruit___h_t_s221_8h.html#a1167b13ef2fc5ceb96750c806985a039">HTS221_WHOAMI</a>&#160;&#160;&#160;0x0F</td></tr>
 <tr class="memdesc:a1167b13ef2fc5ceb96750c806985a039"><td class="mdescLeft">&#160;</td><td class="mdescRight">Chip ID register. <br /></td></tr>

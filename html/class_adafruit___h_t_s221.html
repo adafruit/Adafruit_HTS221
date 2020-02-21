@@ -62,6 +62,7 @@ $(function() {
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
+<a href="#friends">Friends</a> &#124;
 <a href="class_adafruit___h_t_s221-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">Adafruit_HTS221 Class Reference</div>  </div>
@@ -79,9 +80,15 @@ Public Member Functions</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___h_t_s221.html#afdc668feb0f10dc8ec6f69b756b2e71d">Adafruit_HTS221</a> ()</td></tr>
 <tr class="memdesc:afdc668feb0f10dc8ec6f69b756b2e71d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Instantiates a new HTS221 class. <br /></td></tr>
 <tr class="separator:afdc668feb0f10dc8ec6f69b756b2e71d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adfd5051b78d4549c2501e0b46c90fc98"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___h_t_s221.html#adfd5051b78d4549c2501e0b46c90fc98">begin</a> (uint8_t i2c_address=<a class="el" href="_adafruit___h_t_s221_8h.html#ad3ff3e4bc5d39b82fc3119c5ac5a2868">HTS221_I2CADDR_DEFAULT</a>, TwoWire *wire=&amp;Wire, int32_t sensor_id=0)</td></tr>
-<tr class="memdesc:adfd5051b78d4549c2501e0b46c90fc98"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets up the hardware and initializes I2C.  <a href="#adfd5051b78d4549c2501e0b46c90fc98">More...</a><br /></td></tr>
-<tr class="separator:adfd5051b78d4549c2501e0b46c90fc98"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf99726e6346829b2d608ebee3056fe7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___h_t_s221.html#aaf99726e6346829b2d608ebee3056fe7">begin_I2C</a> (uint8_t i2c_addr=<a class="el" href="_adafruit___h_t_s221_8h.html#ad3ff3e4bc5d39b82fc3119c5ac5a2868">HTS221_I2CADDR_DEFAULT</a>, TwoWire *wire=&amp;Wire, int32_t sensor_id=0)</td></tr>
+<tr class="memdesc:aaf99726e6346829b2d608ebee3056fe7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets up the hardware and initializes I2C.  <a href="#aaf99726e6346829b2d608ebee3056fe7">More...</a><br /></td></tr>
+<tr class="separator:aaf99726e6346829b2d608ebee3056fe7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0db370065b66cb1c76109a1cbab6ffef"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___h_t_s221.html#a0db370065b66cb1c76109a1cbab6ffef">begin_SPI</a> (uint8_t cs_pin, SPIClass *theSPI=&amp;SPI, int32_t sensor_id=0)</td></tr>
+<tr class="memdesc:a0db370065b66cb1c76109a1cbab6ffef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets up the hardware and initializes hardware SPI.  <a href="#a0db370065b66cb1c76109a1cbab6ffef">More...</a><br /></td></tr>
+<tr class="separator:a0db370065b66cb1c76109a1cbab6ffef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8e0dca11c30a2d7bf8b25a0178330fb0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___h_t_s221.html#a8e0dca11c30a2d7bf8b25a0178330fb0">begin_SPI</a> (int8_t cs_pin, int8_t sck_pin, int8_t miso_pin, int8_t mosi_pin, int32_t sensor_id=0)</td></tr>
+<tr class="memdesc:a8e0dca11c30a2d7bf8b25a0178330fb0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets up the hardware and initializes software SPI.  <a href="#a8e0dca11c30a2d7bf8b25a0178330fb0">More...</a><br /></td></tr>
+<tr class="separator:a8e0dca11c30a2d7bf8b25a0178330fb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8737347b8a275cfceedae791eb2a9af7"><td class="memItemLeft" align="right" valign="top"><a id="a8737347b8a275cfceedae791eb2a9af7"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___h_t_s221.html#a8737347b8a275cfceedae791eb2a9af7">boot</a> (void)</td></tr>
 <tr class="memdesc:a8737347b8a275cfceedae791eb2a9af7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restores the trimming function values into registers from flash. <br /></td></tr>
@@ -95,15 +102,21 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memitem:aabcedec0121ef58ebd351ba4fd804013"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___h_t_s221.html#aabcedec0121ef58ebd351ba4fd804013">setDataRate</a> (<a class="el" href="_adafruit___h_t_s221_8h.html#a8c4588574a394418f53be54668c0bea2">hts221_rate_t</a> data_rate)</td></tr>
 <tr class="memdesc:aabcedec0121ef58ebd351ba4fd804013"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the rate at which measurements are taken.  <a href="#aabcedec0121ef58ebd351ba4fd804013">More...</a><br /></td></tr>
 <tr class="separator:aabcedec0121ef58ebd351ba4fd804013"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa6b8bcad7ff707b19ccea58cdf29343b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___h_t_s221.html#aa6b8bcad7ff707b19ccea58cdf29343b">getEvent</a> (sensors_event_t *humidity, sensors_event_t *temp)</td></tr>
-<tr class="memdesc:aa6b8bcad7ff707b19ccea58cdf29343b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the pressure sensor and temperature values as sensor events.  <a href="#aa6b8bcad7ff707b19ccea58cdf29343b">More...</a><br /></td></tr>
-<tr class="separator:aa6b8bcad7ff707b19ccea58cdf29343b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6f34f72e699e6a7d02e1835320fe3105"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___h_t_s221.html#a6f34f72e699e6a7d02e1835320fe3105">drdyActiveLow</a> (bool active_low)</td></tr>
 <tr class="memdesc:a6f34f72e699e6a7d02e1835320fe3105"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the polarity of the DRDY pin when active.  <a href="#a6f34f72e699e6a7d02e1835320fe3105">More...</a><br /></td></tr>
 <tr class="separator:a6f34f72e699e6a7d02e1835320fe3105"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7ad631d09039548afb6a08c2c4447add"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___h_t_s221.html#a7ad631d09039548afb6a08c2c4447add">drdyIntEnabled</a> (bool drdy_int_enabled)</td></tr>
 <tr class="memdesc:a7ad631d09039548afb6a08c2c4447add"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables or disables the Data Ready (DRDY) interrupt on the DRDY pin.  <a href="#a7ad631d09039548afb6a08c2c4447add">More...</a><br /></td></tr>
 <tr class="separator:a7ad631d09039548afb6a08c2c4447add"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6b8bcad7ff707b19ccea58cdf29343b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___h_t_s221.html#aa6b8bcad7ff707b19ccea58cdf29343b">getEvent</a> (sensors_event_t *humidity, sensors_event_t *temp)</td></tr>
+<tr class="memdesc:aa6b8bcad7ff707b19ccea58cdf29343b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the humidity sensor and temperature values as sensor events.  <a href="#aa6b8bcad7ff707b19ccea58cdf29343b">More...</a><br /></td></tr>
+<tr class="separator:aa6b8bcad7ff707b19ccea58cdf29343b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa734b5fbe4e03b0d808164a44603ecd"><td class="memItemLeft" align="right" valign="top">Adafruit_Sensor *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___h_t_s221.html#afa734b5fbe4e03b0d808164a44603ecd">getTemperatureSensor</a> (void)</td></tr>
+<tr class="memdesc:afa734b5fbe4e03b0d808164a44603ecd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the Adafruit_Sensor object for the HTS221's humidity sensor.  <a href="#afa734b5fbe4e03b0d808164a44603ecd">More...</a><br /></td></tr>
+<tr class="separator:afa734b5fbe4e03b0d808164a44603ecd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b69a389102bf19394605e4b121e129e"><td class="memItemLeft" align="right" valign="top">Adafruit_Sensor *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___h_t_s221.html#a1b69a389102bf19394605e4b121e129e">getHumiditySensor</a> (void)</td></tr>
+<tr class="memdesc:a1b69a389102bf19394605e4b121e129e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the Adafruit_Sensor object for the HTS221's humidity sensor.  <a href="#a1b69a389102bf19394605e4b121e129e">More...</a><br /></td></tr>
+<tr class="separator:a1b69a389102bf19394605e4b121e129e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -136,18 +149,36 @@ uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="
 Adafruit_I2CDevice *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___h_t_s221.html#ac66ffce43857595562267906bc85e2dd">i2c_dev</a> = NULL</td></tr>
 <tr class="memdesc:ac66ffce43857595562267906bc85e2dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pointer to I2C bus interface. <br /></td></tr>
 <tr class="separator:ac66ffce43857595562267906bc85e2dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e17b0501c2cef9c0e45a06d00782066"><td class="memItemLeft" align="right" valign="top"><a id="a6e17b0501c2cef9c0e45a06d00782066"></a>
+Adafruit_SPIDevice *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___h_t_s221.html#a6e17b0501c2cef9c0e45a06d00782066">spi_dev</a> = NULL</td></tr>
+<tr class="memdesc:a6e17b0501c2cef9c0e45a06d00782066"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pointer to I2C bus interface. <br /></td></tr>
+<tr class="separator:a6e17b0501c2cef9c0e45a06d00782066"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca704f0ed0763e99018a012d03f6d76a"><td class="memItemLeft" align="right" valign="top"><a id="aca704f0ed0763e99018a012d03f6d76a"></a>
+<a class="el" href="class_adafruit___h_t_s221___temp.html">Adafruit_HTS221_Temp</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___h_t_s221.html#aca704f0ed0763e99018a012d03f6d76a">temp_sensor</a> = NULL</td></tr>
+<tr class="memdesc:aca704f0ed0763e99018a012d03f6d76a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Temp sensor data object. <br /></td></tr>
+<tr class="separator:aca704f0ed0763e99018a012d03f6d76a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7211703f2df70ab5008f8ec3b81dee1e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_adafruit___h_t_s221___humidity.html">Adafruit_HTS221_Humidity</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___h_t_s221.html#a7211703f2df70ab5008f8ec3b81dee1e">humidity_sensor</a></td></tr>
+<tr class="memdesc:a7211703f2df70ab5008f8ec3b81dee1e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Humidity sensor data object.  <a href="#a7211703f2df70ab5008f8ec3b81dee1e">More...</a><br /></td></tr>
+<tr class="separator:a7211703f2df70ab5008f8ec3b81dee1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
+Friends</h2></td></tr>
+<tr class="memitem:a62a071466521af20d9e1221b86cf4b75"><td class="memItemLeft" align="right" valign="top">class&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___h_t_s221.html#a62a071466521af20d9e1221b86cf4b75">Adafruit_HTS221_Temp</a></td></tr>
+<tr class="separator:a62a071466521af20d9e1221b86cf4b75"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af0532eb3f719faa38d0b80cd669ca415"><td class="memItemLeft" align="right" valign="top">class&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___h_t_s221.html#af0532eb3f719faa38d0b80cd669ca415">Adafruit_HTS221_Humidity</a></td></tr>
+<tr class="separator:af0532eb3f719faa38d0b80cd669ca415"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class that stores state and functions for interacting with the HTS221 I2C Digital Potentiometer. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="adfd5051b78d4549c2501e0b46c90fc98"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adfd5051b78d4549c2501e0b46c90fc98">&#9670;&nbsp;</a></span>begin()</h2>
+<a id="aaf99726e6346829b2d608ebee3056fe7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaf99726e6346829b2d608ebee3056fe7">&#9670;&nbsp;</a></span>begin_I2C()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool Adafruit_HTS221::begin </td>
+          <td class="memname">bool Adafruit_HTS221::begin_I2C </td>
           <td>(</td>
           <td class="paramtype">uint8_t&#160;</td>
           <td class="paramname"><em>i2c_address</em> = <code><a class="el" href="_adafruit___h_t_s221_8h.html#ad3ff3e4bc5d39b82fc3119c5ac5a2868">HTS221_I2CADDR_DEFAULT</a></code>, </td>
@@ -178,6 +209,110 @@ Adafruit_I2CDevice *&#160;</td><td class="memItemRight" valign="bottom"><a class
     <tr><td class="paramname">i2c_address</td><td>The I2C address to be used. </td></tr>
     <tr><td class="paramname">wire</td><td>The Wire object to be used for I2C connections. </td></tr>
     <tr><td class="paramname">sensor_id</td><td>The unique ID to differentiate the sensors from others </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True if initialization was successful, otherwise false. </dd></dl>
+
+</div>
+</div>
+<a id="a0db370065b66cb1c76109a1cbab6ffef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0db370065b66cb1c76109a1cbab6ffef">&#9670;&nbsp;</a></span>begin_SPI() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Adafruit_HTS221::begin_SPI </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>cs_pin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">SPIClass *&#160;</td>
+          <td class="paramname"><em>theSPI</em> = <code>&amp;SPI</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int32_t&#160;</td>
+          <td class="paramname"><em>sensor_id</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sets up the hardware and initializes hardware SPI. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">cs_pin</td><td>The arduino pin # connected to chip select </td></tr>
+    <tr><td class="paramname">theSPI</td><td>The SPI object to be used for SPI connections. </td></tr>
+    <tr><td class="paramname">sensor_id</td><td>The user-defined ID to differentiate different sensors </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True if initialization was successful, otherwise false. </dd></dl>
+
+</div>
+</div>
+<a id="a8e0dca11c30a2d7bf8b25a0178330fb0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8e0dca11c30a2d7bf8b25a0178330fb0">&#9670;&nbsp;</a></span>begin_SPI() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Adafruit_HTS221::begin_SPI </td>
+          <td>(</td>
+          <td class="paramtype">int8_t&#160;</td>
+          <td class="paramname"><em>cs_pin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int8_t&#160;</td>
+          <td class="paramname"><em>sck_pin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int8_t&#160;</td>
+          <td class="paramname"><em>miso_pin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int8_t&#160;</td>
+          <td class="paramname"><em>mosi_pin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int32_t&#160;</td>
+          <td class="paramname"><em>sensor_id</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sets up the hardware and initializes software SPI. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">cs_pin</td><td>The arduino pin # connected to chip select </td></tr>
+    <tr><td class="paramname">sck_pin</td><td>The arduino pin # connected to SPI clock </td></tr>
+    <tr><td class="paramname">miso_pin</td><td>The arduino pin # connected to SPI MISO </td></tr>
+    <tr><td class="paramname">mosi_pin</td><td>The arduino pin # connected to SPI MOSI </td></tr>
+    <tr><td class="paramname">sensor_id</td><td>The user-defined ID to differentiate different sensors </td></tr>
   </table>
   </dd>
 </dl>
@@ -258,44 +393,6 @@ Adafruit_I2CDevice *&#160;</td><td class="memItemRight" valign="bottom"><a class
 
 </div>
 </div>
-<a id="aa6b8bcad7ff707b19ccea58cdf29343b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa6b8bcad7ff707b19ccea58cdf29343b">&#9670;&nbsp;</a></span>getEvent()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool Adafruit_HTS221::getEvent </td>
-          <td>(</td>
-          <td class="paramtype">sensors_event_t *&#160;</td>
-          <td class="paramname"><em>humidity</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">sensors_event_t *&#160;</td>
-          <td class="paramname"><em>temp</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Gets the pressure sensor and temperature values as sensor events. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">humidity</td><td>Sensor event object that will be populated with humidity data </td></tr>
-    <tr><td class="paramname">temp</td><td>Sensor event object that will be populated with temp data </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>true if the event data was read successfully </dd></dl>
-
-</div>
-</div>
 <a id="a6f34f72e699e6a7d02e1835320fe3105"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6f34f72e699e6a7d02e1835320fe3105">&#9670;&nbsp;</a></span>drdyActiveLow()</h2>
 
@@ -345,6 +442,86 @@ Adafruit_I2CDevice *&#160;</td><td class="memItemRight" valign="bottom"><a class
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="aa6b8bcad7ff707b19ccea58cdf29343b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa6b8bcad7ff707b19ccea58cdf29343b">&#9670;&nbsp;</a></span>getEvent()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Adafruit_HTS221::getEvent </td>
+          <td>(</td>
+          <td class="paramtype">sensors_event_t *&#160;</td>
+          <td class="paramname"><em>humidity</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">sensors_event_t *&#160;</td>
+          <td class="paramname"><em>temp</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gets the humidity sensor and temperature values as sensor events. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">humidity</td><td>Sensor event object that will be populated with humidity data </td></tr>
+    <tr><td class="paramname">temp</td><td>Sensor event object that will be populated with temp data </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true if the event data was read successfully </dd></dl>
+
+</div>
+</div>
+<a id="afa734b5fbe4e03b0d808164a44603ecd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afa734b5fbe4e03b0d808164a44603ecd">&#9670;&nbsp;</a></span>getTemperatureSensor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Adafruit_Sensor * Adafruit_HTS221::getTemperatureSensor </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gets the Adafruit_Sensor object for the HTS221's humidity sensor. </p>
+<dl class="section return"><dt>Returns</dt><dd>Adafruit_Sensor* </dd></dl>
+
+</div>
+</div>
+<a id="a1b69a389102bf19394605e4b121e129e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1b69a389102bf19394605e4b121e129e">&#9670;&nbsp;</a></span>getHumiditySensor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Adafruit_Sensor * Adafruit_HTS221::getHumiditySensor </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gets the Adafruit_Sensor object for the HTS221's humidity sensor. </p>
+<dl class="section return"><dt>Returns</dt><dd>Adafruit_Sensor* </dd></dl>
 
 </div>
 </div>
@@ -409,6 +586,78 @@ Adafruit_I2CDevice *&#160;</td><td class="memItemRight" valign="bottom"><a class
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>True if chip identified and initialized </dd></dl>
+
+</div>
+</div>
+<h2 class="groupheader">Friends And Related Function Documentation</h2>
+<a id="a62a071466521af20d9e1221b86cf4b75"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a62a071466521af20d9e1221b86cf4b75">&#9670;&nbsp;</a></span>Adafruit_HTS221_Temp</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">friend class <a class="el" href="class_adafruit___h_t_s221___temp.html">Adafruit_HTS221_Temp</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">friend</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Gives access to private members to Temp data object </p>
+
+</div>
+</div>
+<a id="af0532eb3f719faa38d0b80cd669ca415"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af0532eb3f719faa38d0b80cd669ca415">&#9670;&nbsp;</a></span>Adafruit_HTS221_Humidity</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">friend class <a class="el" href="class_adafruit___h_t_s221___humidity.html">Adafruit_HTS221_Humidity</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">friend</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Gives access to private members to Humidity data object </p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a7211703f2df70ab5008f8ec3b81dee1e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7211703f2df70ab5008f8ec3b81dee1e">&#9670;&nbsp;</a></span>humidity_sensor</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_adafruit___h_t_s221___humidity.html">Adafruit_HTS221_Humidity</a>* Adafruit_HTS221::humidity_sensor</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">=</div><div class="line">      NULL</div></div><!-- fragment -->
+<p>Humidity sensor data object. </p>
 
 </div>
 </div>
