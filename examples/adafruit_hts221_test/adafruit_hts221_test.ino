@@ -41,7 +41,7 @@ void loop() {
 
   sensors_event_t temp;
   sensors_event_t humidity;
-  hts.getEvent(&humidity, &temp);// get pressure
+  hts.getEvent(&humidity, &temp);// populate temp and humidity objects with fresh data
   Serial.print("Temperature: "); Serial.print(temp.temperature); Serial.println(" degrees C");
   Serial.print("Humidity: "); Serial.print(humidity.relative_humidity); Serial.println("% rH");
 

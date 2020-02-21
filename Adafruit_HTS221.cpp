@@ -43,7 +43,14 @@
  *    @brief  Instantiates a new HTS221 class
  */
 Adafruit_HTS221::Adafruit_HTS221(void) {}
-Adafruit_HTS221::~Adafruit_HTS221(void) {}
+Adafruit_HTS221::~Adafruit_HTS221(void) {
+  if (temp_sensor) {
+    delete temp_sensor;
+  }
+  if (humidity_sensor) {
+    delete humidity_sensor;
+  }
+}
 
 /*!
  *    @brief  Sets up the hardware and initializes I2C
@@ -151,6 +158,9 @@ bool Adafruit_HTS221::_init(int32_t sensor_id) {
 
   _fetchTempCalibrationValues();
   _fetchHumidityCalibrationValues();
+
+  humidity_sensor = new Adafruit_HTS221_Humidity(this);
+  temp_sensor = new Adafruit_HTS221_Temp(this);
   return true;
 }
 
@@ -243,7 +253,7 @@ void Adafruit_HTS221::setDataRate(hts221_rate_t data_rate) {
 
 /**************************************************************************/
 /*!
-    @brief  Gets the pressure sensor and temperature values as sensor events
+    @brief  Gets the humidity sensor and temperature values as sensor events
     @param  humidity Sensor event object that will be populated with humidity
    data
     @param  temp Sensor event object that will be populated with temp data
@@ -388,13 +398,16 @@ void Adafruit_HTS221::_applyTemperatureCorrection(void) {
   // Derived from
   // https://github.com/stm32duino/HTS221/blob/b645af37c51c40b0161ea045e11f9f1bc28b8517/src/HTS221_Driver.c#L396
 
+  // I think this can have the consts that are loaded on init factored out to
+  // make a simple LSB value
   corrected_temp =
       (float)
           // measured temp(LSB) - offset(LSB) * (calibration measurement delta)
-          (float) ((int16_t)raw_temperature - (int16_t)T0_OUT) *
-          (float)((int16_t)T1 -(int16_t) T0) / // divided by..
+          (float)((int16_t)raw_temperature - (int16_t)T0_OUT) *
+          (float)((int16_t)T1 - (int16_t)T0) / // divided by..
           // Calibration LSB delta + Calibration offset?
-          (float)((int16_t)T1_OUT - (int16_t)T0_OUT) + (int16_t)T0;
+          (float)((int16_t)T1_OUT - (int16_t)T0_OUT) +
+      (int16_t)T0;
 }
 
 /**
@@ -417,6 +430,86 @@ void Adafruit_HTS221::_applyHumidityCorrection(void) {
   // Calculate humidity in decimal of grade centigrades i.e. 15.0 = 150.
   h_temp = (float)(((int16_t)raw_humidity - (int16_t)H0_T0_OUT) * hum) /
            (float)((int16_t)H1_T0_OUT - (int16_t)H0_T0_OUT);
-  hum = (float)((int16_t)H0) / 2.0;   // remove x2 multiple
+  hum = (float)((int16_t)H0) / 2.0;    // remove x2 multiple
   corrected_humidity = (hum + h_temp); // provide signed % measurement unit
+}
+
+/**
+ * @brief Gets the Adafruit_Sensor object for the HTS221's humidity sensor
+ *
+ * @return Adafruit_Sensor*
+ */
+Adafruit_Sensor *Adafruit_HTS221::getHumiditySensor(void) {
+  return humidity_sensor;
+}
+
+/**
+ * @brief Gets the Adafruit_Sensor object for the HTS221's humidity sensor
+ *
+ * @return Adafruit_Sensor*
+ */
+Adafruit_Sensor *Adafruit_HTS221::getTemperatureSensor(void) {
+  return temp_sensor;
+}
+/**
+ * @brief  Gets the sensor_t object describing the HTS221's humidity sensor
+ *
+ * @param sensor The sensor_t object to be populated
+ */
+void Adafruit_HTS221_Humidity::getSensor(sensor_t *sensor) {
+  /* Clear the sensor_t object */
+  memset(sensor, 0, sizeof(sensor_t));
+
+  /* Insert the sensor name in the fixed length char array */
+  strncpy(sensor->name, "HTS221_P", sizeof(sensor->name) - 1);
+  sensor->name[sizeof(sensor->name) - 1] = 0;
+  sensor->version = 1;
+  sensor->sensor_id = _sensorID;
+  sensor->type = SENSOR_TYPE_RELATIVE_HUMIDITY;
+  sensor->min_delay = 0;
+  sensor->min_value = 0;  // MATH
+  sensor->max_value = 1;  // MATH
+  sensor->resolution = 0; // depends on calibration values?
+}
+/**
+    @brief  Gets the humidity as a standard sensor event
+    @param  event Sensor event object that will be populated
+    @returns True
+ */
+bool Adafruit_HTS221_Humidity::getEvent(sensors_event_t *event) {
+  _theHTS221->_read();
+  _theHTS221->fillHumidityEvent(event, millis());
+
+  return true;
+}
+/**
+ * @brief  Gets the sensor_t object describing the HTS221's tenperature sensor
+ *
+ * @param sensor The sensor_t object to be populated
+ */
+void Adafruit_HTS221_Temp::getSensor(sensor_t *sensor) {
+  /* Clear the sensor_t object */
+  memset(sensor, 0, sizeof(sensor_t));
+
+  /* Insert the sensor name in the fixed length char array */
+  strncpy(sensor->name, "HTS221_H T", sizeof(sensor->name) - 1);
+  sensor->name[sizeof(sensor->name) - 1] = 0;
+  sensor->version = 1;
+  sensor->sensor_id = _sensorID;
+  sensor->type = SENSOR_TYPE_AMBIENT_TEMPERATURE;
+  sensor->min_delay = 0;
+  sensor->min_value = -40; // CHECK
+  sensor->max_value = 100; // CHECK
+  sensor->resolution = 0;  // depends on calibration data?
+}
+/*!
+    @brief  Gets the temperature as a standard sensor event
+    @param  event Sensor event object that will be populated
+    @returns true
+*/
+bool Adafruit_HTS221_Temp::getEvent(sensors_event_t *event) {
+  _theHTS221->_read();
+  _theHTS221->fillTempEvent(event, millis());
+
+  return true;
 }

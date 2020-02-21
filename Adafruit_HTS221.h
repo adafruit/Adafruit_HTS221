@@ -55,6 +55,45 @@ typedef enum {
   HTS221_RATE_12_5_HZ,
 } hts221_rate_t;
 
+class Adafruit_HTS221;
+
+/**
+ * @brief  Adafruit Unified Sensor interface for the humidity sensor component
+ * of HTS221
+ *
+ */
+class Adafruit_HTS221_Humidity : public Adafruit_Sensor {
+public:
+  /** @brief Create an Adafruit_Sensor compatible object for the humidity sensor
+    @param parent A pointer to the HTS221 class */
+  Adafruit_HTS221_Humidity(Adafruit_HTS221 *parent) { _theHTS221 = parent; }
+  bool getEvent(sensors_event_t *);
+  void getSensor(sensor_t *);
+
+private:
+  int _sensorID = 0x221;
+  Adafruit_HTS221 *_theHTS221 = NULL;
+};
+
+/**
+ * @brief Adafruit Unified Sensor interface for the temperature sensor component
+ * of HTS221
+ *
+ */
+class Adafruit_HTS221_Temp : public Adafruit_Sensor {
+public:
+  /** @brief Create an Adafruit_Sensor compatible object for the temp sensor
+      @param parent A pointer to the HTS221 class */
+  Adafruit_HTS221_Temp(Adafruit_HTS221 *parent) { _theHTS221 = parent; }
+
+  bool getEvent(sensors_event_t *);
+  void getSensor(sensor_t *);
+
+private:
+  int _sensorID = 0x222;
+  Adafruit_HTS221 *_theHTS221 = NULL;
+};
+
 /*!
  *    @brief  Class that stores state and functions for interacting with
  *            the HTS221 I2C Digital Potentiometer
@@ -64,9 +103,6 @@ public:
   Adafruit_HTS221();
   ~Adafruit_HTS221();
 
-  // bool begin(uint8_t i2c_address = HTS221_I2CADDR_DEFAULT,
-  //            TwoWire *wire = &Wire, int32_t sensor_id = 0);
-
   bool begin_I2C(uint8_t i2c_addr = HTS221_I2CADDR_DEFAULT,
                  TwoWire *wire = &Wire, int32_t sensor_id = 0);
 
@@ -75,17 +111,18 @@ public:
   bool begin_SPI(int8_t cs_pin, int8_t sck_pin, int8_t miso_pin,
                  int8_t mosi_pin, int32_t sensor_id = 0);
 
-  // bool getEvent(sensors_event_t *humidity, sensors_event_t *temp);
   void boot(void);
 
   void setActive(bool active);
   hts221_rate_t getDataRate(void);
   void setDataRate(hts221_rate_t data_rate);
-  bool getEvent(sensors_event_t *humidity, sensors_event_t *temp);
+
   void drdyActiveLow(bool active_low);
   void drdyIntEnabled(bool drdy_int_enabled);
-  // Adafruit_Sensor *getTemperatureSensor(void);
-  // Adafruit_Sensor *getPressureSensor(void);
+
+  bool getEvent(sensors_event_t *humidity, sensors_event_t *temp);
+  Adafruit_Sensor *getTemperatureSensor(void);
+  Adafruit_Sensor *getHumiditySensor(void);
 
 protected:
   bool _read(void);
@@ -94,35 +131,35 @@ protected:
   float corrected_temp,   ///< Last reading's temperature (C) before scaling
       corrected_humidity; ///< Last reading's humidity (percent) before scaling
 
-  uint16_t _sensorid_humidity, ///< ID number for humidity
-      _sensorid_temp;          ///< ID number for temperature
+  uint16_t _sensorid_humidity; ///< ID number for humidity
+  uint16_t _sensorid_temp;     ///< ID number for temperature
 
   Adafruit_I2CDevice *i2c_dev = NULL; ///< Pointer to I2C bus interface
   Adafruit_SPIDevice *spi_dev = NULL; ///< Pointer to I2C bus interface
 
-  //   Adafruit_HTS221_Temp *temp_sensor = NULL; ///< Temp sensor data object
-  //   Adafruit_HTS221_Pressure *humidity_sensor =
-  //       NULL; ///< Pressure sensor data object
+  Adafruit_HTS221_Temp *temp_sensor = NULL; ///< Temp sensor data object
+  Adafruit_HTS221_Humidity *humidity_sensor =
+      NULL; ///< Humidity sensor data object
 
 private:
   void _fetchTempCalibrationValues(void);
   void _fetchHumidityCalibrationValues(void);
-  //   friend class Adafruit_HTS221_Temp;     ///< Gives access to private
-  //   members to
-  //                                         ///< Temp data object
-  //   friend class Adafruit_HTS221_Pressure; ///< Gives access to private
-  //                                         ///< members to Pressure data
-  //                                         ///< object
-  //   void fillPressureEvent(sensors_event_t *humidity, uint32_t timestamp);
-  uint16_t T0, T1, T0_OUT, T1_OUT; ///< Temperature calibration values
-  uint8_t H0, H1;                 ///< Humidity calibration values
-  uint16_t H0_T0_OUT, H1_T0_OUT;   ///< Humidity calibration values
-  uint16_t raw_temperature; ///< The raw unscaled, uncorrected temperature value
-  uint16_t raw_humidity;    ///< The raw unscaled, uncorrected pressure value
+  friend class Adafruit_HTS221_Temp;     ///< Gives access to private members to
+                                         ///< Temp data object
+  friend class Adafruit_HTS221_Humidity; ///< Gives access to private members to
+                                         ///< Humidity data object
+
   void fillTempEvent(sensors_event_t *temp, uint32_t timestamp);
   void fillHumidityEvent(sensors_event_t *humidity, uint32_t timestamp);
+
   void _applyTemperatureCorrection(void);
   void _applyHumidityCorrection(void);
+  uint16_t T0, T1, T0_OUT, T1_OUT; ///< Temperature calibration values
+  uint8_t H0, H1;                  ///< Humidity calibration values
+  uint16_t H0_T0_OUT, H1_T0_OUT;   ///< Humidity calibration values
+  uint16_t raw_temperature; ///< The raw unscaled, uncorrected temperature value
+  uint16_t raw_humidity;    ///< The raw unscaled, uncorrected humidity value
+
   uint8_t multi_byte_address_mask = 0x80; // default to I2C
 };
 
