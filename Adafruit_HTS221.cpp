@@ -279,7 +279,7 @@ void Adafruit_HTS221::fillHumidityEvent(sensors_event_t *humidity,
   humidity->sensor_id = _sensorid_humidity;
   humidity->type = SENSOR_TYPE_AMBIENT_TEMPERATURE;
   humidity->timestamp = timestamp;
-  humidity->temperature = corrected_humidity;
+  humidity->relative_humidity = corrected_humidity;
 }
 /******************* Adafruit_Sensor functions *****************/
 /*!
