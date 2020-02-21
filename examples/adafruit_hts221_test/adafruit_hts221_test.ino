@@ -4,7 +4,7 @@
 #include <Adafruit_Sensor.h>
 
 // For SPI mode, we need a CS pin
-#define HTS_CS 7
+#define HTS_CS 10
 // For software-SPI mode we need SCK/MOSI/MISO pins
 #define HTS_SCK 13
 #define HTS_MISO 12
@@ -34,7 +34,6 @@ void setup(void) {
    case HTS221_RATE_7_HZ: Serial.println("7 Hz"); break;
    case HTS221_RATE_12_5_HZ: Serial.println("12.5 Hz"); break;
   }
-  hts.drdyActiveLow(true);
 
 }
 
@@ -44,7 +43,7 @@ void loop() {
   sensors_event_t humidity;
   hts.getEvent(&humidity, &temp);// get pressure
   Serial.print("Temperature: "); Serial.print(temp.temperature); Serial.println(" degrees C");
-//  Serial.print("Humidity(uncorrected): "); Serial.print(humidity.humidity); Serial.println("% rH");
+  Serial.print("Humidity: "); Serial.print(humidity.temperature); Serial.println("% rH");
 
   delay(500);
 }

@@ -150,9 +150,7 @@ bool Adafruit_HTS221::_init(int32_t sensor_id) {
       HTS221_RATE_12_5_HZ); // set to max data rate (default is one shot)
 
   _fetchTempCalibrationValues();
-
   _fetchHumidityCalibrationValues();
-
   return true;
 }
 
@@ -261,9 +259,28 @@ bool Adafruit_HTS221::getEvent(sensors_event_t *humidity,
 
   // use helpers to fill in the events
   fillTempEvent(temp, t);
+  fillHumidityEvent(humidity, t);
   return true;
 }
 
+void Adafruit_HTS221::fillTempEvent(sensors_event_t *temp, uint32_t timestamp) {
+  memset(temp, 0, sizeof(sensors_event_t));
+  temp->version = sizeof(sensors_event_t);
+  temp->sensor_id = _sensorid_temp;
+  temp->type = SENSOR_TYPE_AMBIENT_TEMPERATURE;
+  temp->timestamp = timestamp;
+  temp->temperature = corrected_temp;
+}
+
+void Adafruit_HTS221::fillHumidityEvent(sensors_event_t *humidity,
+                                        uint32_t timestamp) {
+  memset(humidity, 0, sizeof(sensors_event_t));
+  humidity->version = sizeof(sensors_event_t);
+  humidity->sensor_id = _sensorid_humidity;
+  humidity->type = SENSOR_TYPE_AMBIENT_TEMPERATURE;
+  humidity->timestamp = timestamp;
+  humidity->temperature = corrected_humidity;
+}
 /******************* Adafruit_Sensor functions *****************/
 /*!
  *  @brief  Updates the measurement data for all sensors simultaneously
@@ -276,9 +293,14 @@ bool Adafruit_HTS221::_read(void) {
   Adafruit_BusIO_Register temp_data =
       Adafruit_BusIO_Register(i2c_dev, spi_dev, ADDRBIT8_HIGH_TOREAD,
                               (HTS221_TEMP_OUT_L | multi_byte_address_mask), 2);
+  Adafruit_BusIO_Register humidity_data = Adafruit_BusIO_Register(
+      i2c_dev, spi_dev, ADDRBIT8_HIGH_TOREAD,
+      (HTS221_HUMIDITY_OUT | multi_byte_address_mask), 2);
+
+  raw_humidity = 0;
+  humidity_data.read(&raw_humidity);
 
   uint8_t buffer[2];
-
   if (!temp_data.read(buffer, 2)) {
     return false;
   }
@@ -293,18 +315,9 @@ bool Adafruit_HTS221::_read(void) {
   }
 
   _applyTemperatureCorrection();
+  _applyHumidityCorrection();
   return true;
 }
-
-void Adafruit_HTS221::fillTempEvent(sensors_event_t *temp, uint32_t timestamp) {
-  memset(temp, 0, sizeof(sensors_event_t));
-  temp->version = sizeof(sensors_event_t);
-  temp->sensor_id = _sensorid_temp;
-  temp->type = SENSOR_TYPE_AMBIENT_TEMPERATURE;
-  temp->timestamp = timestamp;
-  temp->temperature = corrected_temp; // will need to be corrected
-}
-
 void Adafruit_HTS221::_fetchTempCalibrationValues(void) {
   Adafruit_BusIO_Register t0_degc_x8_l =
       Adafruit_BusIO_Register(i2c_dev, spi_dev, ADDRBIT8_HIGH_TOREAD,
@@ -357,8 +370,6 @@ void Adafruit_HTS221::_fetchHumidityCalibrationValues(void) {
       Adafruit_BusIO_Register(i2c_dev, spi_dev, ADDRBIT8_HIGH_TOREAD,
                               (HTS221_H0_T1 | multi_byte_address_mask), 2);
 
-  // // From page 26 of https://www.st.com/resource/en/datasheet/hts221.pdf
-
   h0_rh_x2.read(&H0);
   h1_rh_x2.read(&H1);
 
@@ -372,8 +383,7 @@ void Adafruit_HTS221::_fetchHumidityCalibrationValues(void) {
  */
 void Adafruit_HTS221::_applyTemperatureCorrection(void) {
 
-  // TEMPERATURE MATH
-  // Poorly explained on pages 27&28 of
+  // info from
   // https://www.st.com/resource/en/datasheet/hts221.pdf
   // Derived from
   // https://github.com/stm32duino/HTS221/blob/b645af37c51c40b0161ea045e11f9f1bc28b8517/src/HTS221_Driver.c#L396
@@ -381,9 +391,32 @@ void Adafruit_HTS221::_applyTemperatureCorrection(void) {
   corrected_temp =
       (float)
           // measured temp(LSB) - offset(LSB) * (calibration measurement delta)
-          (raw_temperature - T0_OUT) *
-          (float)(T1 - T0) / // divided by..
+          (float) ((int16_t)raw_temperature - (int16_t)T0_OUT) *
+          (float)((int16_t)T1 -(int16_t) T0) / // divided by..
           // Calibration LSB delta + Calibration offset?
-          (float)(T1_OUT - T0_OUT) +
-      T0;
+          (float)((int16_t)T1_OUT - (int16_t)T0_OUT) + (int16_t)T0;
+}
+
+/**
+ * @brief Use the humidity calibration values to correct the raw value
+ *
+ */
+void Adafruit_HTS221::_applyHumidityCorrection(void) {
+
+  // Derived from
+  // https://github.com/ameltech/sme-hts221-library/blob/2fe7528f4d42b4b36b39d9f6db76aae25ebe300b/src/Humidity/HTS221.cpp#L185
+
+  uint8_t data = 0;
+  uint16_t h_out = 0;
+  float h_temp = 0.0;
+  float hum = 0.0;
+
+  // Decode Humidity
+  hum = ((int16_t)(H1) - (int16_t)(H0)) / 2.0; // remove x2 multiple
+
+  // Calculate humidity in decimal of grade centigrades i.e. 15.0 = 150.
+  h_temp = (float)(((int16_t)raw_humidity - (int16_t)H0_T0_OUT) * hum) /
+           (float)((int16_t)H1_T0_OUT - (int16_t)H0_T0_OUT);
+  hum = (float)((int16_t)H0) / 2.0;   // remove x2 multiple
+  corrected_humidity = (hum + h_temp); // provide signed % measurement unit
 }
