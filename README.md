@@ -1,4 +1,4 @@
-# Adafruit HTS221 [![Build Status](https://github.com/adafruit/Adafruit_HTS221/workflows/Arduino%20Library%20CI/badge.svg)](https://github.com/adafruit/Adafruit_HTS221/actions)
+# Adafruit HTS221 [![Build Status](https://github.com/adafruit/Adafruit_HTS221/workflows/Arduino%20Library%20CI/badge.svg)](https://github.com/adafruit/Adafruit_HTS221/actions)[![Documentation](https://github.com/adafruit/ci-arduino/blob/master/assets/doxygen_badge.svg)](http://adafruit.github.io/Adafruit_HTS221/html/index.html)
 
 This is the Adafruit HTS221 Humidity and Temperature Sensor library for Arduino
 
