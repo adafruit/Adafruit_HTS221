@@ -154,9 +154,10 @@ private:
 
   void _applyTemperatureCorrection(void);
   void _applyHumidityCorrection(void);
-  uint16_t T0, T1, T0_OUT, T1_OUT; ///< Temperature calibration values
-  uint8_t H0, H1;                  ///< Humidity calibration values
-  uint16_t H0_T0_OUT, H1_T0_OUT;   ///< Humidity calibration values
+  uint16_t T0, T1;          ///< Temperature calibration scaled values
+  uint16_t T0_OUT, T1_OUT;  ///< Temperature calibration lsb values
+  float H0_rh, H1_rh;       ///< Humidity calibration scaled values
+  uint16_t H0_lsb, H1_lsb;  ///< Humidity calibration raw lsb values
   uint16_t raw_temperature; ///< The raw unscaled, uncorrected temperature value
   uint16_t raw_humidity;    ///< The raw unscaled, uncorrected humidity value
 

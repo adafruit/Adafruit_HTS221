@@ -380,11 +380,11 @@ void Adafruit_HTS221::_fetchHumidityCalibrationValues(void) {
       Adafruit_BusIO_Register(i2c_dev, spi_dev, ADDRBIT8_HIGH_TOREAD,
                               (HTS221_H0_T1 | multi_byte_address_mask), 2);
 
-  h0_rh_x2.read(&H0);
-  h1_rh_x2.read(&H1);
+  H0_rh = (h0_rh_x2.read() / 2.0); // remove x2 multiple
+  H1_rh = (h1_rh_x2.read() / 2.0); // remove x2 multiple
 
-  h0_t0_out.read(&H0_T0_OUT);
-  h1_t0_out.read(&H1_T0_OUT);
+  h0_t0_out.read(&H0_lsb);
+  h1_t0_out.read(&H1_lsb);
 }
 
 /**
@@ -416,22 +416,25 @@ void Adafruit_HTS221::_applyTemperatureCorrection(void) {
  */
 void Adafruit_HTS221::_applyHumidityCorrection(void) {
 
-  // Derived from
-  // https://github.com/ameltech/sme-hts221-library/blob/2fe7528f4d42b4b36b39d9f6db76aae25ebe300b/src/Humidity/HTS221.cpp#L185
-
   uint8_t data = 0;
   uint16_t h_out = 0;
-  float h_temp = 0.0;
-  float hum = 0.0;
+  float hum_working_variable = 0.0;
+  float delta_rh_calib = 0.0;
+  float delta_lsb_calib = 0.0;
+  // these can be cached
+  delta_rh_calib = ((int16_t)(H1_rh) - (int16_t)(H0_rh));
+  delta_lsb_calib = (float)((int16_t)H1_lsb - (int16_t)H0_lsb);
 
-  // Decode Humidity
-  hum = ((int16_t)(H1) - (int16_t)(H0)) / 2.0; // remove x2 multiple
+  hum_working_variable =
+      (float)(((int16_t)raw_humidity -
+               (int16_t)H0_lsb) // lsb offset from  calibration lsb 0
+              * (delta_rh_calib / delta_lsb_calib) // calibration ratio /slope;
+      ); // result  is the offset from the first calibration value's scaled
+         // result
 
-  // Calculate humidity in decimal of grade centigrades i.e. 15.0 = 150.
-  h_temp = (float)(((int16_t)raw_humidity - (int16_t)H0_T0_OUT) * hum) /
-           (float)((int16_t)H1_T0_OUT - (int16_t)H0_T0_OUT);
-  hum = (float)((int16_t)H0) / 2.0;    // remove x2 multiple
-  corrected_humidity = (hum + h_temp); // provide signed % measurement unit
+  corrected_humidity =
+      (hum_working_variable +
+       H0_rh); // which is added to get the final corrected value
 }
 
 /**
