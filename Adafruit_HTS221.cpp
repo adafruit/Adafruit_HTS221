@@ -307,8 +307,8 @@ bool Adafruit_HTS221::_read(void) {
       i2c_dev, spi_dev, ADDRBIT8_HIGH_TOREAD,
       (HTS221_HUMIDITY_OUT | multi_byte_address_mask), 2);
 
-  raw_humidity = 0;
-  humidity_data.read(&raw_humidity);
+  raw_hum_lsb = 0;
+  humidity_data.read(&raw_hum_lsb);
 
   uint8_t buffer[2];
   if (!temp_data.read(buffer, 2)) {
@@ -380,11 +380,17 @@ void Adafruit_HTS221::_fetchHumidityCalibrationValues(void) {
       Adafruit_BusIO_Register(i2c_dev, spi_dev, ADDRBIT8_HIGH_TOREAD,
                               (HTS221_H0_T1 | multi_byte_address_mask), 2);
 
-  H0_rh = (h0_rh_x2.read() / 2.0); // remove x2 multiple
-  H1_rh = (h1_rh_x2.read() / 2.0); // remove x2 multiple
+  H0_rh = (h0_rh_x2.read() / 2.0);       // remove x2 multiple
+  float H1_rh = (h1_rh_x2.read() / 2.0); // remove x2 multiple
 
   h0_t0_out.read(&H0_lsb);
-  h1_t0_out.read(&H1_lsb);
+  uint16_t H1_lsb = (uint16_t)h1_t0_out.read();
+
+  float delta_rh_calib = ((int16_t)(H1_rh) - (int16_t)(H0_rh));
+  float delta_lsb_calib = (float)((int16_t)H1_lsb - (int16_t)H0_lsb);
+
+  humidity_scalar =
+      (float)(delta_rh_calib / delta_lsb_calib); // calibration ratio /slope;
 }
 
 /**
@@ -415,26 +421,16 @@ void Adafruit_HTS221::_applyTemperatureCorrection(void) {
  *
  */
 void Adafruit_HTS221::_applyHumidityCorrection(void) {
+  // current measurements's raw(lsb) value's offset from the unscaled
+  // calibration value 0 is scaled using the scalar derived from the scaled
+  // calibration values result is the offset from H0 (in lsb) scaled to %rH
 
-  uint8_t data = 0;
-  uint16_t h_out = 0;
-  float hum_working_variable = 0.0;
-  float delta_rh_calib = 0.0;
-  float delta_lsb_calib = 0.0;
-  // these can be cached
-  delta_rh_calib = ((int16_t)(H1_rh) - (int16_t)(H0_rh));
-  delta_lsb_calib = (float)((int16_t)H1_lsb - (int16_t)H0_lsb);
+  float offset_from_h0_rh =
+      (float)(((int16_t)raw_hum_lsb - (int16_t)H0_lsb) * humidity_scalar);
 
-  hum_working_variable =
-      (float)(((int16_t)raw_humidity -
-               (int16_t)H0_lsb) // lsb offset from  calibration lsb 0
-              * (delta_rh_calib / delta_lsb_calib) // calibration ratio /slope;
-      ); // result  is the offset from the first calibration value's scaled
-         // result
-
-  corrected_humidity =
-      (hum_working_variable +
-       H0_rh); // which is added to get the final corrected value
+  // The scaled offset from H0 is then added to H0 to get the final corrected
+  // value in %rH
+  corrected_humidity = offset_from_h0_rh + H0_rh;
 }
 
 /**

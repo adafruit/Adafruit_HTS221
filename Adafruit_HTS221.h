@@ -156,10 +156,12 @@ private:
   void _applyHumidityCorrection(void);
   uint16_t T0, T1;          ///< Temperature calibration scaled values
   uint16_t T0_OUT, T1_OUT;  ///< Temperature calibration lsb values
-  float H0_rh, H1_rh;       ///< Humidity calibration scaled values
-  uint16_t H0_lsb, H1_lsb;  ///< Humidity calibration raw lsb values
   uint16_t raw_temperature; ///< The raw unscaled, uncorrected temperature value
-  uint16_t raw_humidity;    ///< The raw unscaled, uncorrected humidity value
+
+  float H0_rh;               ///< Calibration measurement 0 scaled
+  uint16_t H0_lsb;           ///< Calibration measurement 0 unscaled
+  float humidity_scalar = 1; ///< Value used to scale from raw LSB to %RH
+  uint16_t raw_hum_lsb;      ///< The raw unscaled, uncorrected humidity value
 
   uint8_t multi_byte_address_mask = 0x80; // default to I2C
 };
