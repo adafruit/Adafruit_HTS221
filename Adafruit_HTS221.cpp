@@ -419,8 +419,8 @@ void Adafruit_HTS221::_applyHumidityCorrection(void) {
   // Derived from
   // https://github.com/ameltech/sme-hts221-library/blob/2fe7528f4d42b4b36b39d9f6db76aae25ebe300b/src/Humidity/HTS221.cpp#L185
 
-  uint8_t data = 0;
-  uint16_t h_out = 0;
+  //uint8_t data = 0;
+  //uint16_t h_out = 0;
   float h_temp = 0.0;
   float hum = 0.0;
 
