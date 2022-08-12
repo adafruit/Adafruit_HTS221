@@ -98,7 +98,7 @@ private:
  *    @brief  Class that stores state and functions for interacting with
  *            the HTS221 I2C Digital Potentiometer
  */
-class Adafruit_HTS221 {
+class Adafruit_HTS221 final {
 public:
   Adafruit_HTS221();
   ~Adafruit_HTS221();
