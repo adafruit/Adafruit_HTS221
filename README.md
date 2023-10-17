@@ -3,7 +3,7 @@
 This is the Adafruit HTS221 Humidity and Temperature Sensor library for Arduino
 
 Tested and works great with the Adafruit HTS221 Breakout Board
-[<img src="assets/board.png?raw=true" width="500px">](https://www.adafruit.com/products/453X)
+[<img src="assets/board.png?raw=true" width="500px">](https://www.adafruit.com/products/4535)
 This chip uses I2C to communicate, 2 pins are required to interface
 
 Adafruit invests time and resources providing this open source code, please support Adafruit and open-source hardware by purchasing products from Adafruit!
